@@ -1,20 +1,191 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useState} from "react";
+import {View, FlatList, ListRenderItem, useColorScheme} from "react-native";
+import {TextInput, Button, IconButton, Provider as PaperProvider, Appbar, Dialog, Portal, Paragraph} from "react-native-paper";
+import {StatusBar} from 'expo-status-bar';
+import {styles, colors} from "./styling";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+interface ListItem {
+    id: string;
+    name: string;
+    leftValue: number;
+    rightValue?: number;
+    totalValue: number;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const initialItems: ListItem[] = [
+    {id: "1", name: "", leftValue: 0, totalValue: 0},
+    {id: "2", name: "", leftValue: 0, totalValue: 0},
+    {id: "3", name: "", leftValue: 0, totalValue: 0},
+    {id: "4", name: "", leftValue: 0, totalValue: 0},
+];
+
+export default function App() {
+    const colorScheme = useColorScheme();
+    const themeTextStyle = colorScheme === 'light' ? colors.lightThemeText : colors.darkThemeText;
+    const themeContainerStyle = colorScheme === 'light' ? colors.lightContainer : colors.darkContainer;
+
+    const [items, setItems] = useState<ListItem[]>(initialItems);
+    const [toggleRight, setToggleRight] = useState<boolean>(false);
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [resetConfirmationVisible, setResetConfirmationVisible] = useState<boolean>(false);
+
+    const updateValue = (index: number, delta: number) => {
+        setItems((prevItems) =>
+            prevItems.map((item, idx) => {
+                if (idx === index) {
+                    if (toggleRight) {
+                        const newValue = (item.rightValue || 0) + delta;
+                        return {...item, rightValue: Math.max(newValue, 0)};
+                    } else {
+                        const newValue = item.leftValue + delta;
+                        return {...item, leftValue: Math.max(newValue, 0)};
+                    }
+                }
+                return item;
+            }),
+        );
+    };
+
+    const toggleHandler = () => {
+        if (toggleRight) {
+            setItems((prevItems) =>
+                prevItems.map((item) => {
+                    let updatedTotal = item.totalValue;
+                    if (item.leftValue === item.rightValue) {
+                        updatedTotal += 10 + item.leftValue * 2;
+                    } else {
+                        updatedTotal -= item.leftValue === 0 ? 2 : item.leftValue * 2;
+                    }
+                    return {...item, leftValue: 0, rightValue: undefined, totalValue: updatedTotal};
+                }),
+            );
+        } else {
+            setItems((prevItems) =>
+                prevItems.map((item) => ({
+                    ...item,
+                    rightValue: item.leftValue,
+                })),
+            );
+        }
+        setToggleRight(!toggleRight);
+    };
+
+    const resetHandler = () => {
+        setItems(initialItems.map(item => ({
+            ...item,
+            leftValue: 0,
+            rightValue: undefined,
+            totalValue: 0,
+        })));
+        setToggleRight(false);
+        setResetConfirmationVisible(false);
+    };
+
+    const toggleEditMode = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const addPlayer = () => {
+        const newId = (items.length + 1).toString();
+        setItems((prevItems) => [
+            ...prevItems,
+            {id: newId, name: "", leftValue: 0, totalValue: 0},
+        ]);
+    };
+
+    const removePlayer = () => {
+        setItems((prevItems) => prevItems.slice(0, -1));
+    };
+
+    const renderItem: ListRenderItem<ListItem> = ({item, index}) => (
+        <View style={[styles.listItem, themeContainerStyle]}>
+            <TextInput
+                style={styles.nameField}
+                mode="outlined"
+                label="Spieler"
+                value={item.name}
+                onChangeText={(text) =>
+                    setItems((prevItems) =>
+                        prevItems.map((i, idx) => (idx === index ? {...i, name: text} : i)),
+                    )
+                }
+            />
+            <View style={styles.valuesContainer}>
+                <View style={styles.box}>
+                    <TextInput
+                        mode="outlined"
+                        value={item.leftValue.toString()}
+                        editable={false}
+                        style={[
+                            styles.valueField,
+                            !toggleRight && styles.activeField,
+                        ]}
+                    />
+                </View>
+                <View style={styles.box}>
+                    <TextInput
+                        mode="outlined"
+                        value={item.rightValue !== undefined ? item.rightValue.toString() : ""}
+                        editable={false}
+                        style={[
+                            styles.valueField,
+                            toggleRight && styles.activeField,
+                        ]}
+                    />
+                </View>
+            </View>
+            <View style={styles.buttonContainer}>
+                <IconButton mode="contained" icon="minus" style={styles.valueButton}
+                            onPress={() => updateValue(index, -1)}/>
+                <IconButton mode="contained" icon="plus" style={styles.valueButton}
+                            onPress={() => updateValue(index, 1)}/>
+            </View>
+            <TextInput
+                mode="outlined"
+                style={styles.totalText}
+                editable={false}
+            >{item.totalValue}
+            </TextInput>
+        </View>
+    );
+
+    return (
+        <PaperProvider>
+            <Appbar.Header>
+                <Appbar.Content title="Aufzug"/>
+                <Appbar.Action icon={isEditing ? "content-save" : "pencil"} onPress={toggleEditMode}/>
+                <Appbar.Action icon="restore" onPress={() => setResetConfirmationVisible(true)}/>
+            </Appbar.Header>
+            <View style={[styles.container, themeContainerStyle]}>
+                <FlatList data={items} renderItem={renderItem} keyExtractor={(item) => item.id}/>
+                {isEditing && (
+                    <View style={styles.editControls}>
+                        <IconButton mode="contained" icon="plus" style={[styles.valueButton, styles.editButton]} onPress={addPlayer}/>
+                        <IconButton mode="contained" icon="minus" style={[styles.valueButton, styles.editButton]} onPress={removePlayer}/>
+                    </View>
+                )}
+                <IconButton
+                    icon={toggleRight ? "check-all" : "check"}
+                    iconColor="#ffffff"
+                    size={32}
+                    onPress={toggleHandler}
+                    style={styles.floatingButton}
+                />
+            </View>
+            <Portal>
+                <Dialog visible={resetConfirmationVisible} onDismiss={() => setResetConfirmationVisible(false)}>
+                    <Dialog.Icon icon="alert"/>
+                    <Dialog.Title>Reset</Dialog.Title>
+                    <Dialog.Content>
+                        <Paragraph>Möchtest du den Punktestand zurücksetzen?</Paragraph>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={() => setResetConfirmationVisible(false)}>Abbrechen</Button>
+                        <Button onPress={resetHandler}>Ja, zurücksetzen</Button>
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
+             <StatusBar />
+        </PaperProvider>
+    );
+}
