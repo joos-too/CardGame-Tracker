@@ -55,6 +55,9 @@ export default function App() {
         );
     };
 
+    const getLeftTotal = () => items.reduce((sum, item) => sum + item.leftValue, 0);
+    const getRightTotal = () => items.reduce((sum, item) => sum + (item.rightValue || 0), 0);
+
     const toggleHandler = () => {
         if (toggleRight) {
             setItems((prevItems) =>
@@ -185,8 +188,7 @@ export default function App() {
                         ),
                     )
                 }
-            >
-            </TextInput>
+            />
         </View>
     );
 
@@ -194,6 +196,10 @@ export default function App() {
         <PaperProvider>
             <Appbar.Header>
                 <Appbar.Content title="Aufzug"/>
+                <Appbar.Content
+                    title={`${getLeftTotal()}:${getRightTotal()}`}
+                    style={{alignItems: "center"}}
+                />
                 <Appbar.Action icon={isEditing ? "content-save" : "pencil"} onPress={toggleEditMode}/>
                 <Appbar.Action icon="restore" onPress={() => setResetConfirmationVisible(true)}/>
             </Appbar.Header>
@@ -216,7 +222,6 @@ export default function App() {
                         style={styles.floatingButton}
                     />
                 )}
-
             </View>
             <Portal>
                 <Dialog visible={resetConfirmationVisible} onDismiss={() => setResetConfirmationVisible(false)}>
