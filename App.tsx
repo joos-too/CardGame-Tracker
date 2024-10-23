@@ -1,6 +1,15 @@
 import React, {useState} from "react";
 import {View, FlatList, ListRenderItem, useColorScheme} from "react-native";
-import {TextInput, Button, IconButton, Provider as PaperProvider, Appbar, Dialog, Portal, Paragraph} from "react-native-paper";
+import {
+    TextInput,
+    Button,
+    IconButton,
+    Provider as PaperProvider,
+    Appbar,
+    Dialog,
+    Portal,
+    Paragraph
+} from "react-native-paper";
 import {StatusBar} from 'expo-status-bar';
 import {styles, colors} from "./styling";
 
@@ -102,6 +111,7 @@ export default function App() {
             <TextInput
                 style={styles.nameField}
                 mode="outlined"
+                editable={isEditing}
                 label="Spieler"
                 value={item.name}
                 onChangeText={(text) =>
@@ -115,11 +125,21 @@ export default function App() {
                     <TextInput
                         mode="outlined"
                         value={item.leftValue.toString()}
-                        editable={false}
+                        editable={isEditing && toggleRight}
+                        disabled={isEditing && !toggleRight}
                         style={[
                             styles.valueField,
-                            !toggleRight && styles.activeField,
+                            !toggleRight && !isEditing && styles.activeField,
                         ]}
+                        onChangeText={(text) =>
+                            setItems((prevItems) =>
+                                prevItems.map((i, idx) =>
+                                    idx === index
+                                        ? {...i, leftValue: parseInt(text) || 0}
+                                        : i,
+                                ),
+                            )
+                        }
                     />
                 </View>
                 <View style={styles.box}>
@@ -127,24 +147,45 @@ export default function App() {
                         mode="outlined"
                         value={item.rightValue !== undefined ? item.rightValue.toString() : ""}
                         editable={false}
+                        disabled={isEditing}
                         style={[
                             styles.valueField,
-                            toggleRight && styles.activeField,
+                            toggleRight && !isEditing && styles.activeField,
                         ]}
                     />
                 </View>
             </View>
             <View style={styles.buttonContainer}>
-                <IconButton mode="contained" icon="minus" style={styles.valueButton}
-                            onPress={() => updateValue(index, -1)}/>
-                <IconButton mode="contained" icon="plus" style={styles.valueButton}
-                            onPress={() => updateValue(index, 1)}/>
+                <IconButton
+                    mode="contained"
+                    icon="minus"
+                    style={styles.valueButton}
+                    onPress={() => updateValue(index, -1)}
+                    disabled={isEditing}
+                />
+                <IconButton
+                    mode="contained"
+                    icon="plus"
+                    style={styles.valueButton}
+                    onPress={() => updateValue(index, 1)}
+                    disabled={isEditing}
+                />
             </View>
             <TextInput
                 mode="outlined"
+                value={item.totalValue.toString()}
+                editable={isEditing}
                 style={styles.totalText}
-                editable={false}
-            >{item.totalValue}
+                onChangeText={(text) =>
+                    setItems((prevItems) =>
+                        prevItems.map((i, idx) =>
+                            idx === index
+                                ? {...i, totalValue: parseInt(text) || 0}
+                                : i,
+                        ),
+                    )
+                }
+            >
             </TextInput>
         </View>
     );
@@ -160,17 +201,22 @@ export default function App() {
                 <FlatList data={items} renderItem={renderItem} keyExtractor={(item) => item.id}/>
                 {isEditing && (
                     <View style={styles.editControls}>
-                        <IconButton mode="contained" icon="plus" style={[styles.valueButton, styles.editButton]} onPress={addPlayer}/>
-                        <IconButton mode="contained" icon="minus" style={[styles.valueButton, styles.editButton]} onPress={removePlayer}/>
+                        <IconButton mode="contained" icon="plus" style={[styles.valueButton, styles.editButton]}
+                                    onPress={addPlayer}/>
+                        <IconButton mode="contained" icon="minus" style={[styles.valueButton, styles.editButton]}
+                                    onPress={removePlayer}/>
                     </View>
                 )}
-                <IconButton
-                    icon={toggleRight ? "check-all" : "check"}
-                    iconColor="#ffffff"
-                    size={32}
-                    onPress={toggleHandler}
-                    style={styles.floatingButton}
-                />
+                {!isEditing && (
+                    <IconButton
+                        icon={toggleRight ? "check-all" : "check"}
+                        iconColor="#ffffff"
+                        size={32}
+                        onPress={toggleHandler}
+                        style={styles.floatingButton}
+                    />
+                )}
+
             </View>
             <Portal>
                 <Dialog visible={resetConfirmationVisible} onDismiss={() => setResetConfirmationVisible(false)}>
@@ -185,7 +231,7 @@ export default function App() {
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
-             <StatusBar />
+            <StatusBar/>
         </PaperProvider>
     );
 }

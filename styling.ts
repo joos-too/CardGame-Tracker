@@ -49,6 +49,7 @@ export const styles = StyleSheet.create({
         justifyContent: "center",
     },
     editButton: {
+        marginLeft: "auto",
         height: 50,
         width: 50
     },
