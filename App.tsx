@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, FlatList, ListRenderItem, useColorScheme } from "react-native";
-import {
-    TextInput,
-    Button,
-    IconButton,
-    Provider as PaperProvider,
-    Appbar,
-    Dialog,
-    Portal,
-    Paragraph
-} from "react-native-paper";
+import { TextInput, Button, IconButton, Provider as PaperProvider, Appbar, Dialog, Portal, Paragraph } from "react-native-paper";
 import { StatusBar } from 'expo-status-bar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styles, colors } from "./styling";
 
 interface ListItem {
@@ -37,7 +29,31 @@ export default function App() {
     const [toggleRight, setToggleRight] = useState<boolean>(false);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [resetConfirmationVisible, setResetConfirmationVisible] = useState<boolean>(false);
-    const [activePlayerIndex, setActivePlayerIndex] = useState<number>(0); // Track the active player index
+    const [activePlayerIndex, setActivePlayerIndex] = useState<number>(0);
+    useEffect(() => {
+        const loadItems = async () => {
+            try {
+                const savedItems = await AsyncStorage.getItem('items');
+                if (savedItems) {
+                    setItems(JSON.parse(savedItems));
+                }
+            } catch (error) {
+                console.error("Fehler beim Laden der Daten:", error);
+            }
+        };
+        loadItems();
+    }, []);
+
+    useEffect(() => {
+        const saveItems = async () => {
+            try {
+                await AsyncStorage.setItem('items', JSON.stringify(items));
+            } catch (error) {
+                console.error("Fehler beim Speichern der Daten:", error);
+            }
+        };
+        saveItems();
+    }, [items]);
 
     const updateValue = (index: number, delta: number) => {
         setItems((prevItems) =>
@@ -82,10 +98,8 @@ export default function App() {
         }
 
         if (!toggleRight) {
-            // Update active player index on toggle to left
             setActivePlayerIndex((prevIndex) => {
-                const nextIndex = (prevIndex + 1) % items.length; // Loop back to the top
-                return nextIndex;
+                return (prevIndex + 1) % items.length;
             });
         }
 
@@ -101,11 +115,7 @@ export default function App() {
         })));
         setToggleRight(false);
         setResetConfirmationVisible(false);
-        setActivePlayerIndex(0); // Reset active player index
-    };
-
-    const toggleEditMode = () => {
-        setIsEditing(!isEditing);
+        setActivePlayerIndex(0);
     };
 
     const addPlayer = () => {
@@ -123,9 +133,10 @@ export default function App() {
     const renderItem: ListRenderItem<ListItem> = ({ item, index }) => (
         <View style={[styles.listItem, themeContainerStyle]}>
             <TextInput
-                style={[styles.nameField]} //, index === activePlayerIndex && styles.activeNameField
+                style={[styles.nameField, index === activePlayerIndex && styles.activeNameField]}
                 mode="outlined"
                 editable={isEditing}
+                textColor={index === activePlayerIndex ? "#7d28f3": ""}
                 label="Spieler"
                 value={item.name}
                 onChangeText={(text) =>
@@ -137,6 +148,7 @@ export default function App() {
             <View style={styles.valuesContainer}>
                 <TextInput
                     mode="outlined"
+                    inputMode={"numeric"}
                     value={item.leftValue.toString()}
                     editable={isEditing && toggleRight}
                     disabled={isEditing && !toggleRight}
@@ -184,6 +196,7 @@ export default function App() {
             <TextInput
                 mode="outlined"
                 value={item.totalValue.toString()}
+                inputMode={"numeric"}
                 editable={isEditing}
                 style={styles.totalText}
                 onChangeText={(text) =>
@@ -208,12 +221,10 @@ export default function App() {
                         {`${getLeftTotal()}:${getRightTotal()}`}
                     </Text>
                 </View>
-                <Appbar.Action icon={isEditing ? "content-save" : "pencil"} onPress={toggleEditMode} />
+                <Appbar.Action icon={isEditing ? "content-save" : "pencil"} onPress={() => setIsEditing(!isEditing)} />
                 <Appbar.Action icon="restore" onPress={() => setResetConfirmationVisible(true)} />
             </Appbar.Header>
-            <View
-                removeClippedSubviews={false}
-                style={[styles.topContainer, themeContainerStyle]}>
+            <View removeClippedSubviews={false} style={[styles.topContainer, themeContainerStyle]}>
                 <FlatList data={items} renderItem={renderItem} keyExtractor={(item) => item.id} />
                 {!isEditing && (
                     <IconButton
@@ -226,15 +237,11 @@ export default function App() {
                 )}
             </View>
             {isEditing && (
-                    <View
-                        removeClippedSubviews={false}
-                        style={[styles.bottomContainer, themeContainerStyle]}>
-                        <IconButton mode="contained" icon="plus" style={[styles.valueButton, styles.editButton]}
-                            onPress={addPlayer} />
-                        <IconButton mode="contained" icon="minus" style={[styles.valueButton, styles.editButton]}
-                            onPress={removePlayer} />
-                    </View>
-                )}
+                <View removeClippedSubviews={false} style={[styles.bottomContainer, themeContainerStyle]}>
+                    <IconButton mode="contained" icon="plus" style={[styles.valueButton, styles.editButton]} onPress={addPlayer} />
+                    <IconButton mode="contained" icon="minus" style={[styles.valueButton, styles.editButton]} onPress={removePlayer} />
+                </View>
+            )}
             <Portal>
                 <Dialog visible={resetConfirmationVisible} onDismiss={() => setResetConfirmationVisible(false)}>
                     <Dialog.Icon icon="alert" />

@@ -10,21 +10,17 @@ export const styles = StyleSheet.create({
     },
     listItem: {
         flexDirection: "row",
-        alignItems: "flex-end",
+        alignItems: "center",
         marginBottom: 15,
     },
     nameField: {
         flex: 1,
         marginRight: 4,
         borderWidth: 1,
-        borderRadius: 5,
         height: 50,
     },
     activeNameField: {
-        borderWidth: 1,
-        borderRadius: 5,
-        borderTopWidth: 1,
-        borderColor: "#6200ee",
+        fontWeight: "bold"
     },
     valuesContainer: {
         flexDirection: "row",
@@ -35,7 +31,7 @@ export const styles = StyleSheet.create({
         width: 50,
         borderWidth: 1,
         borderRadius: 5,
-        fontSize: 30,
+        fontSize: 25,
     },
     activeValueField: {
         borderColor: "#6200ee",
@@ -49,7 +45,6 @@ export const styles = StyleSheet.create({
         marginHorizontal: 4,
     },
     totalText: {
-        borderRadius: 5,
         fontSize: 19,
         fontWeight: "bold",
     },
