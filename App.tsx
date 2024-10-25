@@ -97,7 +97,7 @@ export default function App() {
             );
         }
 
-        if (!toggleRight) {
+        if (toggleRight) {
             setActivePlayerIndex((prevIndex) => {
                 return (prevIndex + 1) % items.length;
             });
