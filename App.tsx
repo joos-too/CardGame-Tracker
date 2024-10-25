@@ -224,24 +224,34 @@ export default function App() {
                 <Appbar.Action icon={isEditing ? "content-save" : "pencil"} onPress={() => setIsEditing(!isEditing)} />
                 <Appbar.Action icon="restore" onPress={() => setResetConfirmationVisible(true)} />
             </Appbar.Header>
-            <View removeClippedSubviews={false} style={[styles.topContainer, themeContainerStyle]}>
-                <FlatList data={items} renderItem={renderItem} keyExtractor={(item) => item.id} />
-                {!isEditing && (
-                    <IconButton
-                        icon={toggleRight ? "check-all" : "check"}
-                        iconColor="#ffffff"
-                        size={32}
-                        onPress={toggleHandler}
-                        style={styles.floatingButton}
-                    />
-                )}
-            </View>
-            {isEditing && (
-                <View removeClippedSubviews={false} style={[styles.bottomContainer, themeContainerStyle]}>
-                    <IconButton mode="contained" icon="plus" style={[styles.valueButton, styles.editButton]} onPress={addPlayer} />
-                    <IconButton mode="contained" icon="minus" style={[styles.valueButton, styles.editButton]} onPress={removePlayer} />
-                </View>
-            )}
+<View removeClippedSubviews={false} style={[styles.container, themeContainerStyle, isEditing ? {paddingBottom: 145} : {paddingBottom: 100}]}>
+    <FlatList data={items} renderItem={renderItem} keyExtractor={(item) => item.id} />
+    {!isEditing && (
+        <IconButton
+            icon={toggleRight ? "check-all" : "check"}
+            iconColor="#ffffff"
+            size={32}
+            onPress={toggleHandler}
+            style={styles.floatingButton}
+        />
+    )}
+    {isEditing && (
+        <>
+            <IconButton
+                mode="contained"
+                icon="plus"
+                style={[styles.valueButton, styles.editButton, {bottom: 80}]}
+                onPress={addPlayer}
+            />
+            <IconButton
+                mode="contained"
+                icon="minus"
+                style={[styles.valueButton, styles.editButton, {bottom: 16}]}
+                onPress={removePlayer}
+            />
+        </>
+    )}
+</View>
             <Portal>
                 <Dialog visible={resetConfirmationVisible} onDismiss={() => setResetConfirmationVisible(false)}>
                     <Dialog.Icon icon="alert" />

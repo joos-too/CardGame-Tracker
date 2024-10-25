@@ -1,12 +1,9 @@
 import {StyleSheet} from "react-native";
 
 export const styles = StyleSheet.create({
-    topContainer: {
+    container: {
         flex: 1,
         padding: 10,
-        paddingBottom: 100,
-    },
-    bottomContainer: {
     },
     listItem: {
         flexDirection: "row",
@@ -57,20 +54,20 @@ export const styles = StyleSheet.create({
         fontSize: 35,
     },
     editButton: {
+        position: "absolute",
         marginLeft: "auto",
         height: 50,
         width: 50,
-        right: 16,
-        bottom: 16,
+        right: 15,
     },
     floatingButton: {
         position: "absolute",
-        right: 16,
-        bottom: 16,
+        backgroundColor: "#6200ee",
         borderRadius: 15,
         height: 70,
         width: 70,
-        backgroundColor: "#6200ee",
+        right: 15,
+        bottom: 15,
     },
 });
 
