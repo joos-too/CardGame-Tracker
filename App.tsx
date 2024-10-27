@@ -1,9 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { Text, View, FlatList, ListRenderItem, useColorScheme } from "react-native";
-import { TextInput, Button, IconButton, Provider as PaperProvider, Appbar, Dialog, Portal, Paragraph } from "react-native-paper";
-import { StatusBar } from 'expo-status-bar';
+import React, {useState, useEffect} from "react";
+import {Text, View, FlatList, ListRenderItem, useColorScheme} from "react-native";
+import {
+    TextInput,
+    Button,
+    IconButton,
+    Provider as PaperProvider,
+    Appbar,
+    Dialog,
+    Portal,
+    Paragraph
+} from "react-native-paper";
+import {StatusBar} from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { styles, colors } from "./styling";
+import {styles} from "./constants/Styles";
+import {colors} from "./constants/Colors";
+import BorderedText from "./components/BorderedText";
 
 interface ListItem {
     id: string;
@@ -14,10 +25,10 @@ interface ListItem {
 }
 
 const initialItems: ListItem[] = [
-    { id: "1", name: "", leftValue: 0, totalValue: 0 },
-    { id: "2", name: "", leftValue: 0, totalValue: 0 },
-    { id: "3", name: "", leftValue: 0, totalValue: 0 },
-    { id: "4", name: "", leftValue: 0, totalValue: 0 },
+    {id: "1", name: "", leftValue: 0, totalValue: 0},
+    {id: "2", name: "", leftValue: 0, totalValue: 0},
+    {id: "3", name: "", leftValue: 0, totalValue: 0},
+    {id: "4", name: "", leftValue: 0, totalValue: 0},
 ];
 
 export default function App() {
@@ -30,6 +41,7 @@ export default function App() {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [resetConfirmationVisible, setResetConfirmationVisible] = useState<boolean>(false);
     const [activePlayerIndex, setActivePlayerIndex] = useState<number>(0);
+
     useEffect(() => {
         const loadItems = async () => {
             try {
@@ -60,11 +72,11 @@ export default function App() {
             prevItems.map((item, idx) => {
                 if (idx === index) {
                     if (toggleRight) {
-                        const newValue = (item.rightValue || 0) + delta;
-                        return { ...item, rightValue: Math.max(newValue, 0) };
+                        const newValue = Math.min(99, (item.rightValue || 0) + delta);
+                        return {...item, rightValue: Math.max(newValue, 0)};
                     } else {
-                        const newValue = item.leftValue + delta;
-                        return { ...item, leftValue: Math.max(newValue, 0) };
+                        const newValue = Math.min(99, item.leftValue + delta);
+                        return {...item, leftValue: Math.max(newValue, 0)};
                     }
                 }
                 return item;
@@ -85,7 +97,7 @@ export default function App() {
                     } else {
                         updatedTotal -= item.leftValue === 0 ? 2 : item.leftValue * 2;
                     }
-                    return { ...item, leftValue: 0, rightValue: undefined, totalValue: updatedTotal };
+                    return {...item, leftValue: 0, rightValue: undefined, totalValue: updatedTotal};
                 }),
             );
         } else {
@@ -102,7 +114,6 @@ export default function App() {
                 return (prevIndex + 1) % items.length;
             });
         }
-
         setToggleRight(!toggleRight);
     };
 
@@ -122,7 +133,7 @@ export default function App() {
         const newId = (items.length + 1).toString();
         setItems((prevItems) => [
             ...prevItems,
-            { id: newId, name: "", leftValue: 0, totalValue: 0 },
+            {id: newId, name: "", leftValue: 0, totalValue: 0},
         ]);
     };
 
@@ -130,80 +141,48 @@ export default function App() {
         setItems((prevItems) => prevItems.slice(0, -1));
     };
 
-    const renderItem: ListRenderItem<ListItem> = ({ item, index }) => (
-        <View style={[styles.listItem, themeContainerStyle]}>
+    const renderItem: ListRenderItem<ListItem> = ({item, index}) => (
+        <View style={[styles.listElement, themeContainerStyle]}>
             <TextInput
-                style={[styles.nameField, index === activePlayerIndex && styles.activeNameField]}
+                style={[styles.nameField, index === activePlayerIndex && {fontWeight: "bold"}]}
                 mode="outlined"
                 editable={isEditing}
-                textColor={index === activePlayerIndex ? "#7d28f3": ""}
-                label="Spieler"
+                textColor={index === activePlayerIndex ? "#873def" : ""}
+                placeholder="Spieler"
                 value={item.name}
                 onChangeText={(text) =>
                     setItems((prevItems) =>
-                        prevItems.map((i, idx) => (idx === index ? { ...i, name: text } : i)),
+                        prevItems.map((i, idx) => (idx === index ? {...i, name: text} : i)),
                     )
                 }
             />
-            <View style={styles.valuesContainer}>
-                <TextInput
-                    mode="outlined"
-                    inputMode={"numeric"}
-                    value={item.leftValue.toString()}
-                    editable={isEditing && toggleRight}
-                    disabled={isEditing && !toggleRight}
-                    style={[
-                        styles.valueField,
-                        !toggleRight && !isEditing && styles.activeValueField,
-                    ]}
-                    onChangeText={(text) =>
-                        setItems((prevItems) =>
-                            prevItems.map((i, idx) =>
-                                idx === index
-                                    ? { ...i, leftValue: parseInt(text) || 0 }
-                                    : i,
-                            ),
-                        )
-                    }
-                />
-                <TextInput
-                    mode="outlined"
-                    value={item.rightValue !== undefined ? item.rightValue.toString() : ""}
-                    editable={false}
-                    disabled={isEditing}
-                    style={[
-                        styles.valueField,
-                        toggleRight && !isEditing && styles.activeValueField,
-                    ]}
-                />
-            </View>
-            <View style={styles.buttonContainer}>
-                <IconButton
-                    mode="contained"
-                    icon="minus"
-                    style={styles.valueButton}
-                    onPress={() => updateValue(index, -1)}
-                    disabled={isEditing}
-                />
-                <IconButton
-                    mode="contained"
-                    icon="plus"
-                    style={styles.valueButton}
-                    onPress={() => updateValue(index, 1)}
-                    disabled={isEditing}
-                />
-            </View>
+            <BorderedText value={item.leftValue.toString()}
+                          style={[styles.innerListItem, !toggleRight && !isEditing && {borderColor: "#6200ee"}]}/>
+            <BorderedText value={item.rightValue !== undefined ? item.rightValue.toString() : ""}
+                          style={[styles.innerListItem, toggleRight && !isEditing && {borderColor: "#6200ee"}]}/>
+            <IconButton
+                style={[styles.valueButton, styles.innerListItem]}
+                mode="contained"
+                icon="minus"
+                onPress={() => updateValue(index, -1)}
+            />
+            <IconButton
+                style={[styles.valueButton, styles.innerListItem]}
+                mode="contained"
+                icon="plus"
+                onPress={() => updateValue(index, 1)}
+            />
             <TextInput
+                style={styles.totalField}
                 mode="outlined"
-                value={item.totalValue.toString()}
                 inputMode={"numeric"}
                 editable={isEditing}
-                style={styles.totalText}
+                value={item.totalValue.toString()}
                 onChangeText={(text) =>
                     setItems((prevItems) =>
                         prevItems.map((i, idx) =>
                             idx === index
-                                ? { ...i, totalValue: parseInt(text) || 0 }
+                                ? {...i, totalValue: parseInt(text) || 0}
                                 : i,
                         ),
                     )
@@ -215,46 +194,47 @@ export default function App() {
     return (
         <PaperProvider>
             <Appbar.Header>
-                <Appbar.Content title="Aufzug" />
+                <Appbar.Content title="Aufzug"/>
                 <View style={styles.totalBetView}>
                     <Text style={[styles.totalBetText, themeTextStyle]}>
                         {`${getLeftTotal()}:${getRightTotal()}`}
                     </Text>
                 </View>
-                <Appbar.Action icon={isEditing ? "content-save" : "pencil"} onPress={() => setIsEditing(!isEditing)} />
-                <Appbar.Action icon="restore" onPress={() => setResetConfirmationVisible(true)} />
+                <Appbar.Action icon={isEditing ? "content-save" : "pencil"} onPress={() => setIsEditing(!isEditing)}/>
+                <Appbar.Action icon="restore" onPress={() => setResetConfirmationVisible(true)}/>
             </Appbar.Header>
-<View removeClippedSubviews={false} style={[styles.container, themeContainerStyle, isEditing ? {paddingBottom: 145} : {paddingBottom: 100}]}>
-    <FlatList data={items} renderItem={renderItem} keyExtractor={(item) => item.id} />
-    {!isEditing && (
-        <IconButton
-            icon={toggleRight ? "check-all" : "check"}
-            iconColor="#ffffff"
-            size={32}
-            onPress={toggleHandler}
-            style={styles.floatingButton}
-        />
-    )}
-    {isEditing && (
-        <>
-            <IconButton
-                mode="contained"
-                icon="plus"
-                style={[styles.valueButton, styles.editButton, {bottom: 80}]}
-                onPress={addPlayer}
-            />
-            <IconButton
-                mode="contained"
-                icon="minus"
-                style={[styles.valueButton, styles.editButton, {bottom: 16}]}
-                onPress={removePlayer}
-            />
-        </>
-    )}
-</View>
+            <View removeClippedSubviews={false}
+                  style={[styles.container, themeContainerStyle, isEditing ? {paddingBottom: 145} : {paddingBottom: 100}]}>
+                <FlatList data={items} renderItem={renderItem} keyExtractor={(item) => item.id}/>
+                {!isEditing && (
+                    <IconButton
+                        style={styles.checkButton}
+                        icon={toggleRight ? "check-all" : "check"}
+                        iconColor="#ffffff"
+                        size={32}
+                        onPress={toggleHandler}
+                    />
+                )}
+                {isEditing && (
+                    <>
+                        <IconButton
+                            style={[styles.valueButton, styles.editPlayerButton, {bottom: 80}]}
+                            mode="contained"
+                            icon="plus"
+                            onPress={addPlayer}
+                        />
+                        <IconButton
+                            style={[styles.valueButton, styles.editPlayerButton, {bottom: 16}]}
+                            mode="contained"
+                            icon="minus"
+                            onPress={removePlayer}
+                        />
+                    </>
+                )}
+            </View>
             <Portal>
                 <Dialog visible={resetConfirmationVisible} onDismiss={() => setResetConfirmationVisible(false)}>
-                    <Dialog.Icon icon="alert" />
+                    <Dialog.Icon icon="alert"/>
                     <Dialog.Title>Reset</Dialog.Title>
                     <Dialog.Content>
                         <Paragraph>Möchtest du den Punktestand zurücksetzen?</Paragraph>
@@ -265,7 +245,7 @@ export default function App() {
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
-            <StatusBar />
+            <StatusBar/>
         </PaperProvider>
     );
 }
