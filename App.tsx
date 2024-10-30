@@ -141,10 +141,29 @@ export default function App() {
         setItems((prevItems) => prevItems.slice(0, -1));
     };
 
-    const renderItem: ListRenderItem<ListItem> = ({item, index}) => (
+const renderItem: ListRenderItem<ListItem> = ({ item, index }) => {
+    const sortedItems = items
+        .filter(i => i.totalValue > 0)
+        .sort((a, b) => b.totalValue - a.totalValue);
+
+    const uniqueValues = Array.from(new Set(sortedItems.map(i => i.totalValue)));
+    const topValues = uniqueValues.slice(0, 3);
+    let borderColor;
+
+    if (topValues.includes(item.totalValue)) {
+        if (topValues[0] === item.totalValue) {
+            borderColor = colors.gold.borderColor;
+        } else if (topValues[1] === item.totalValue) {
+            borderColor = colors.silver.borderColor;
+        } else if (topValues[2] === item.totalValue) {
+            borderColor = colors.bronze.borderColor;
+        }
+    }
+
+    return (
         <View style={[styles.listElement, themeContainerStyle]}>
             <TextInput
-                style={[styles.nameField, index === activePlayerIndex && {fontWeight: "bold"}]}
+                style={[styles.nameField, index === activePlayerIndex && { fontWeight: "bold" }]}
                 mode="outlined"
                 editable={isEditing}
                 textColor={index === activePlayerIndex ? "#873def" : ""}
@@ -156,10 +175,14 @@ export default function App() {
                     )
                 }
             />
-            <BorderedText value={item.leftValue.toString()}
-                          style={[styles.innerListItem, !toggleRight && !isEditing && {borderColor: "#6200ee"}]}/>
-            <BorderedText value={item.rightValue !== undefined ? item.rightValue.toString() : ""}
-                          style={[styles.innerListItem, toggleRight && !isEditing && {borderColor: "#6200ee"}]}/>
+            <BorderedText
+                style={[styles.innerListItem, !toggleRight && !isEditing && { borderColor: "#6200ee" }]}
+                value={item.leftValue.toString()}
+            />
+            <BorderedText
+                style={[styles.innerListItem, toggleRight && !isEditing && { borderColor: "#6200ee" }]}
+                value={item.rightValue !== undefined ? item.rightValue.toString() : ""}
+            />
             <IconButton
                 style={[styles.valueButton, styles.innerListItem]}
                 mode="contained"
@@ -172,24 +195,13 @@ export default function App() {
                 icon="plus"
                 onPress={() => updateValue(index, 1)}
             />
-            <TextInput
-                style={styles.totalField}
-                mode="outlined"
-                inputMode={"numeric"}
-                editable={isEditing}
+            <BorderedText
+                style={[styles.totalField, borderColor ? { borderColor } : {}]}
                 value={item.totalValue.toString()}
-                onChangeText={(text) =>
-                    setItems((prevItems) =>
-                        prevItems.map((i, idx) =>
-                            idx === index
-                                ? {...i, totalValue: parseInt(text) || 0}
-                                : i,
-                        ),
-                    )
-                }
             />
         </View>
     );
+};
 
     return (
         <PaperProvider>
@@ -205,7 +217,11 @@ export default function App() {
             </Appbar.Header>
             <View removeClippedSubviews={false}
                   style={[styles.container, themeContainerStyle, isEditing ? {paddingBottom: 145} : {paddingBottom: 100}]}>
-                <FlatList data={items} renderItem={renderItem} keyExtractor={(item) => item.id}/>
+                <FlatList
+                    data={items}
+                    keyboardShouldPersistTaps="handled"
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}/>
                 {!isEditing && (
                     <IconButton
                         style={styles.checkButton}

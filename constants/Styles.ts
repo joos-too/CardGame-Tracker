@@ -3,10 +3,6 @@ import {StyleSheet} from "react-native";
 
 export const styles = StyleSheet.create({
     //start list-items//
-    container: {
-        flex: 1,
-        padding: 10,
-    },
     listElement: {
         flexDirection: "row",
         alignItems: "center",
@@ -24,12 +20,17 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
     },
     totalField: {
+        width: 55,
+        height: 55,
         marginLeft: 4,
-        fontSize: 19,
-        fontWeight: "bold",
+        fontSize: 25,
     },
     //end list-items//
 
+    container: {
+        flex: 1,
+        padding: 10,
+    },
     totalBetView: {
         flex: 1.75,
         alignItems: "center",
@@ -51,20 +52,5 @@ export const styles = StyleSheet.create({
         width: 70,
         right: 15,
         bottom: 15,
-    },
-});
-
-export const colors = StyleSheet.create({
-    lightContainer: {
-        backgroundColor: "#ffffff",
-    },
-    darkContainer: {
-        backgroundColor: "#000000",
-    },
-    lightThemeText: {
-        color: "#0a7ea4",
-    },
-    darkThemeText: {
-        color: "#ffffff",
     },
 });

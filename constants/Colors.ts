@@ -19,5 +19,14 @@ export const colors = StyleSheet.create({
     },
     darkInputField: {
         backgroundColor: "#1c1c1c",
-    }
+    },
+    gold: {
+        borderColor: "#D4AF37",
+    },
+    silver: {
+        borderColor: "#C0C0C0",
+    },
+    bronze: {
+        borderColor: "#9F7A34",
+    },
 });
