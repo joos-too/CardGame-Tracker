@@ -1,37 +1,40 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { Tabs } from 'expo-router';
+import React from 'react';
+import {useColorScheme} from 'react-native';
+import {TabBarIcon} from '@/components/TabBarIcon';
+import {colors} from '@/constants/Colors';
+import {DarkTheme, DefaultTheme, ThemeProvider} from "@react-navigation/native";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+export default function TabLayout() {
+    const colorScheme = useColorScheme();
+    const themeTextStyle = colorScheme === 'light' ? colors.lightThemeText : colors.darkThemeText;
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
-  );
+    return (
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <Tabs
+                screenOptions={{
+                    tabBarActiveTintColor: themeTextStyle.color,
+                    headerShown: false,
+                }}>
+                <Tabs.Screen
+                    name="index"
+                    options={{
+                        title: 'Tabelle',
+                        tabBarIcon: ({color, focused}) => (
+                            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color}/>
+                        ),
+                    }}
+                />
+                <Tabs.Screen
+                    name="history"
+                    options={{
+                        title: 'Verlauf',
+                        tabBarIcon: ({color, focused}) => (
+                            <TabBarIcon name={focused ? 'time' : 'time-outline'} color={color}/>
+                        ),
+                    }}
+                />
+            </Tabs>
+        </ThemeProvider>
+    );
 }

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Aufzug-CardGame",
-    "slug": "Aufzug-CardGame",
+    "name": "Aufzug",
+    "slug": "Aufzug",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -16,10 +16,12 @@
       "supportsTablet": true
     },
     "android": {
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.fmlp.AufzugCardGame"
     },
     "web": {
       "bundler": "metro",
@@ -28,9 +30,6 @@
     },
     "plugins": [
       "expo-router"
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
+    ]
   }
 }
