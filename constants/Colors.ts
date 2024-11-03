@@ -1,22 +1,29 @@
+export const themeColors = {
+    light: {
+        container: {
+            backgroundColor: "#ffffff",
+        },
+        text: {
+            color: "#48444e"
+        },
+        input: {
+            backgroundColor: "#fffbfe"
+        },
+    },
+    dark: {
+        container: {
+            backgroundColor: "#000000",
+        },
+        text: {
+            color: "#ffffff"
+        },
+        input: {
+            backgroundColor: "#1c1c1c"
+        },
+    },
+};
+
 export const colors = {
-    lightContainer: {
-        backgroundColor: "#ffffff",
-    },
-    darkContainer: {
-        backgroundColor: "#000000",
-    },
-    lightThemeText: {
-        color: "#48444e",
-    },
-    darkThemeText: {
-        color: "#ffffff",
-    },
-    lightInputField: {
-        backgroundColor: "#fffbfe",
-    },
-    darkInputField: {
-        backgroundColor: "#1c1c1c",
-    },
     gold: {
         borderColor: "#D4AF37",
     },

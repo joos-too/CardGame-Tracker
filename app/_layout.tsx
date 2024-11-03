@@ -1,36 +1,36 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import {useColorScheme} from 'react-native';
-import {TabBarIcon} from '@/components/TabBarIcon';
-import {colors} from '@/constants/Colors';
+import { Tabs } from "expo-router";
+import React from "react";
+import {useColorScheme} from "react-native";
+import {TabBarIcon} from "@/components/TabBarIcon";
+import {themeColors} from "@/constants/Colors";
 import {DarkTheme, DefaultTheme, ThemeProvider} from "@react-navigation/native";
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
-    const themeTextStyle = colorScheme === 'light' ? colors.lightThemeText : colors.darkThemeText;
+    const themeText = colorScheme === "light" ? themeColors.light.text : themeColors.dark.text;
 
     return (
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
             <Tabs
                 screenOptions={{
-                    tabBarActiveTintColor: themeTextStyle.color,
+                    tabBarActiveTintColor: themeText.color,
                     headerShown: false,
                 }}>
                 <Tabs.Screen
                     name="index"
                     options={{
-                        title: 'Tabelle',
+                        title: "Tabelle",
                         tabBarIcon: ({color, focused}) => (
-                            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color}/>
+                            <TabBarIcon name={focused ? "table" : "table-border"} color={color}/>
                         ),
                     }}
                 />
                 <Tabs.Screen
-                    name="history"
+                    name="leaderboard"
                     options={{
-                        title: 'Verlauf',
+                        title: "Leaderboard",
                         tabBarIcon: ({color, focused}) => (
-                            <TabBarIcon name={focused ? 'time' : 'time-outline'} color={color}/>
+                            <TabBarIcon name={focused ? "chart-box" : "chart-box-outline"} color={color}/>
                         ),
                     }}
                 />

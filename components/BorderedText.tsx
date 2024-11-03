@@ -1,21 +1,21 @@
 import React from "react";
-import {Text, StyleSheet, StyleProp, ViewStyle, useColorScheme} from "react-native";
-import {colors} from "@/constants/Colors";
+import {Text, StyleSheet, StyleProp, useColorScheme} from "react-native";
+import {themeColors} from "@/constants/Colors";
 
 
 interface BorderedTextProps {
     value: string;
-    style?: StyleProp<ViewStyle>;
+    style?: StyleProp<any>;
 }
 
 const BorderedText: React.FC<BorderedTextProps> = ({ value, style }) => {
     const colorScheme = useColorScheme();
-    const themeTextStyle = colorScheme === "light" ? colors.lightThemeText : colors.darkThemeText;
-    const backgroundColor = colorScheme === "light" ? colors.lightInputField : colors.darkInputField;
+    const themeText = colorScheme === "light" ? themeColors.light.text : themeColors.dark.text;
+    const fieldBackgroundColor = colorScheme === "light" ? themeColors.light.input : themeColors.dark.input;
 
     return (
         <Text
-            style={[custom.valueField, backgroundColor, themeTextStyle, style]}>
+            style={StyleSheet.flatten([custom.valueField, fieldBackgroundColor, themeText, style])}>
             {value}
         </Text>
     );

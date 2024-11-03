@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from "react";
 import {Text, View, FlatList, ListRenderItem, useColorScheme} from "react-native";
 import {TextInput, Button, IconButton, Provider as PaperProvider, Appbar, Dialog, Portal, Paragraph} from "react-native-paper";
-import {StatusBar} from 'expo-status-bar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {styles} from "@/constants/Styles";
-import {colors} from "@/constants/Colors";
+import {StatusBar} from "expo-status-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {indexStyles} from "@/constants/Styles";
+import {themeColors} from "@/constants/Colors";
 import BorderedText from "@/components/BorderedText";
 import {Player} from "@/constants/Interfaces";
 
@@ -17,19 +17,21 @@ const Players: Player[] = [
 
 export default function App() {
     const colorScheme = useColorScheme();
-    const themeTextStyle = colorScheme === 'light' ? colors.lightThemeText : colors.darkThemeText;
-    const themeContainerStyle = colorScheme === 'light' ? colors.lightContainer : colors.darkContainer;
+    const themeText = colorScheme === "light" ? themeColors.light.text : themeColors.dark.text;
+    const themeContainer = colorScheme === "light" ? themeColors.light.container : themeColors.dark.container;
 
     const [items, setItems] = useState<Player[]>(Players);
     const [toggleRight, setToggleRight] = useState<boolean>(false);
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const [resetConfirmationVisible, setResetConfirmationVisible] = useState<boolean>(false);
     const [activePlayerIndex, setActivePlayerIndex] = useState<number>(0);
+    const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
 
     useEffect(() => {
         const loadItems = async () => {
             try {
-                const savedItems = await AsyncStorage.getItem('players');
+                const savedItems = await AsyncStorage.getItem("players");
                 if (savedItems) {
                     setItems(JSON.parse(savedItems));
                 }
@@ -43,7 +45,7 @@ export default function App() {
     useEffect(() => {
         const saveItems = async () => {
             try {
-                await AsyncStorage.setItem('players', JSON.stringify(items));
+                await AsyncStorage.setItem("players", JSON.stringify(items));
             } catch (error) {
                 console.error("Fehler beim Speichern der Daten:", error);
             }
@@ -83,7 +85,6 @@ export default function App() {
                     const lastValue = updatedTotal.length > 0 ? updatedTotal[updatedTotal.length - 1] : 0;
                     updatedTotal.push(lastValue + newValue);
 
-                    //console.log(prevItems);
                     return {...item, leftValue: 0, rightValue: undefined, totalValue: updatedTotal};
                 }),
             );
@@ -128,78 +129,75 @@ export default function App() {
         setItems((prevItems) => prevItems.slice(0, -1));
     };
 
-const renderItem: ListRenderItem<Player> = ({ item, index }) => {
-    const filteredItems = items.filter(i => i.totalValue.length > 1);
+    const renderPlayer: ListRenderItem<Player> = ({ item, index }) => {
 
-    const sortedItems = filteredItems.sort((a, b) => {
-        const lastValueA = a.totalValue[a.totalValue.length - 1];
-        const lastValueB = b.totalValue[b.totalValue.length - 1];
-        return lastValueB - lastValueA;
-    });
-
-    const uniqueValues = Array.from(new Set(sortedItems.map(i => i.totalValue[i.totalValue.length - 1])));
-    const topValues = uniqueValues.slice(0, 3);
-    let borderColor;
-
-    if (topValues.includes(item.totalValue[item.totalValue.length - 1])) {
-        if (topValues[0] === item.totalValue[item.totalValue.length - 1]) {
-            borderColor = colors.gold.borderColor;
-        } else if (topValues[1] === item.totalValue[item.totalValue.length - 1]) {
-            borderColor = colors.silver.borderColor;
-        } else if (topValues[2] === item.totalValue[item.totalValue.length - 1]) {
-            borderColor = colors.bronze.borderColor;
-        }
-    }
-
-    return (
-        <View style={[styles.listElement, themeContainerStyle]}>
-            <TextInput
-                style={[styles.nameField, index === activePlayerIndex && { fontWeight: "bold" }]}
-                mode="outlined"
-                editable={isEditing}
-                textColor={index === activePlayerIndex ? "#873def" : ""}
-                placeholder="Spieler"
-                value={item.name}
-                onChangeText={(text) =>
-                    setItems((prevItems) =>
-                        prevItems.map((i, idx) => (idx === index ? {...i, name: text} : i)),
-                    )
-                }
-            />
-            <BorderedText
-                style={[styles.innerListItem, !toggleRight && !isEditing && { borderColor: "#6200ee" }]}
-                value={item.leftValue.toString()}
-            />
-            <BorderedText
-                style={[styles.innerListItem, toggleRight && !isEditing && { borderColor: "#6200ee" }]}
-                value={item.rightValue !== undefined ? item.rightValue.toString() : ""}
-            />
-            <IconButton
-                style={[styles.valueButton, styles.innerListItem]}
-                mode="contained"
-                icon="minus"
-                onPress={() => updateValue(index, -1)}
-            />
-            <IconButton
-                style={[styles.valueButton, styles.innerListItem]}
-                mode="contained"
-                icon="plus"
-                onPress={() => updateValue(index, 1)}
-            />
-            <BorderedText
-                style={[styles.totalField, borderColor ? { borderColor } : {}]}
-                value={item.totalValue[item.totalValue.length - 1].toString()}
-            />
-        </View>
-    );
-};
+        return (
+            <View style={[indexStyles.listElement, themeContainer]}>
+                <TextInput
+                    style={[indexStyles.nameField, index === activePlayerIndex && { fontWeight: "bold" }]}
+                    mode="outlined"
+                    editable={isEditing}
+                    textColor={index === activePlayerIndex ? "#873def" : ""}
+                    placeholder="Spieler"
+                    value={item.name}
+                    onChangeText={(text) =>
+                        setItems((prevItems) =>
+                            prevItems.map((i, idx) => (idx === index ? { ...i, name: text } : i)),
+                        )
+                    }
+                />
+                <View style={indexStyles.innerListGroup}>
+                    <BorderedText
+                        style={[indexStyles.innerListItem, !toggleRight && !isEditing && { borderColor: "#6200ee" }]}
+                        value={item.leftValue.toString()}
+                    />
+                    <BorderedText
+                        style={[indexStyles.innerListItem, toggleRight && !isEditing && { borderColor: "#6200ee" }]}
+                        value={item.rightValue !== undefined ? item.rightValue.toString() : ""}
+                    />
+                </View>
+                <View style={indexStyles.innerListGroup}>
+                    {isEditing ? (
+                        <IconButton
+                            style={[indexStyles.valueButton, indexStyles.innerListItem, { width: 88 }]}
+                            mode="contained"
+                            icon="pencil"
+                            onPress={() => {
+                                setSelectedPlayer(item);
+                                setModalVisible(true);
+                            }}
+                        />
+                    ) : (
+                        <>
+                            <IconButton
+                                style={[indexStyles.valueButton, indexStyles.innerListItem]}
+                                mode="contained"
+                                icon="minus"
+                                onPress={() => updateValue(index, -1)}
+                            />
+                            <IconButton
+                                style={[indexStyles.valueButton, indexStyles.innerListItem]}
+                                mode="contained"
+                                icon="plus"
+                                onPress={() => updateValue(index, 1)}
+                            />
+                        </>
+                    )}
+                </View>
+                <BorderedText
+                    style={[indexStyles.totalField, index === activePlayerIndex ? { borderColor: "#873def" } : {}]}
+                    value={item.totalValue[item.totalValue.length - 1].toString()}
+                />
+            </View>
+        );
+    };
 
     return (
         <PaperProvider>
             <Appbar.Header>
-                <Appbar.Content title="Aufzug"/>
-                <View style={styles.totalBetView}>
-                    <Text style={[styles.totalBetText, themeTextStyle]}>
+                <Appbar.Content title="Tabelle"/>
+                <View style={indexStyles.totalBetView}>
+                    <Text style={[indexStyles.totalBetText, themeText]}>
                         {`${getLeftTotal()}:${getRightTotal()}`}
                     </Text>
                 </View>
@@ -208,15 +206,15 @@ const renderItem: ListRenderItem<Player> = ({ item, index }) => {
             </Appbar.Header>
             <View
                 removeClippedSubviews={false}
-                style={[styles.container, themeContainerStyle, isEditing ? {paddingBottom: 145} : {paddingBottom: 100}]}>
+                style={[indexStyles.container, themeContainer, isEditing ? {paddingBottom: 145} : {paddingBottom: 100}]}>
                 <FlatList
                     data={items}
                     keyboardShouldPersistTaps="handled"
-                    renderItem={renderItem}
+                    renderItem={renderPlayer}
                     keyExtractor={(item) => item.id}/>
                 {!isEditing && (
                     <IconButton
-                        style={styles.checkButton}
+                        style={indexStyles.checkButton}
                         icon={toggleRight ? "check-all" : "check"}
                         iconColor="#ffffff"
                         size={32}
@@ -226,13 +224,13 @@ const renderItem: ListRenderItem<Player> = ({ item, index }) => {
                 {isEditing && (
                     <>
                         <IconButton
-                            style={[styles.valueButton, styles.editPlayerButton, {bottom: 80}]}
+                            style={[indexStyles.valueButton, indexStyles.editPlayerButton, {bottom: 80}]}
                             mode="contained"
                             icon="plus"
                             onPress={addPlayer}
                         />
                         <IconButton
-                            style={[styles.valueButton, styles.editPlayerButton, {bottom: 16}]}
+                            style={[indexStyles.valueButton, indexStyles.editPlayerButton, {bottom: 16}]}
                             mode="contained"
                             icon="minus"
                             onPress={removePlayer}
@@ -250,6 +248,68 @@ const renderItem: ListRenderItem<Player> = ({ item, index }) => {
                     <Dialog.Actions>
                         <Button onPress={() => setResetConfirmationVisible(false)}>Abbrechen</Button>
                         <Button onPress={resetHandler}>Ja, zurücksetzen</Button>
+                    </Dialog.Actions>
+                </Dialog>
+
+                <Dialog visible={modalVisible} onDismiss={() => setModalVisible(false)}>
+                    <Dialog.Title>{selectedPlayer?.name ? selectedPlayer?.name : "Spieler"}</Dialog.Title>
+                    <Dialog.Content>
+                        <View style={[indexStyles.modalItem, indexStyles.modalTopRow]}>
+                            <TextInput
+                                style={[indexStyles.modalValueField, {marginRight: 10}]}
+                                label="Linker Wert"
+                                value={selectedPlayer?.leftValue.toString()}
+                                mode="outlined"
+                                keyboardType="numeric"
+                                onChangeText={(text) => {
+                                    if (selectedPlayer) {
+                                        setSelectedPlayer({ ...selectedPlayer, leftValue: Number(text) });
+                                    }
+                                }}
+                            />
+                            <TextInput
+                                style={[indexStyles.modalValueField, {marginLeft: 10}]}
+                                label="Rechter Wert"
+                                editable={toggleRight}
+                                value={selectedPlayer?.rightValue ? selectedPlayer?.rightValue.toString() : "0"}
+                                mode="outlined"
+                                keyboardType="numeric"
+                                onChangeText={(text) => {
+                                    if (selectedPlayer) {
+                                        setSelectedPlayer({ ...selectedPlayer, rightValue: Number(text) });
+                                    }
+                                }}
+                            />
+                        </View>
+                        <TextInput
+                            style={indexStyles.modalItem}
+                            label="Summe"
+                            value={selectedPlayer?.totalValue[selectedPlayer?.totalValue.length - 1].toString()}
+                            mode="outlined"
+                            keyboardType="numeric"
+                            onChangeText={(text) => {
+                                if (selectedPlayer) {
+                                    const newTotalValue = [...selectedPlayer.totalValue];
+                                    newTotalValue[newTotalValue.length - 1] = Number(text);
+                                    setSelectedPlayer({ ...selectedPlayer, totalValue: newTotalValue });
+                                }
+                            }}
+                        />
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={() => setModalVisible(false)}>Schließen</Button>
+                        <Button
+                            onPress={() => {
+                                if (selectedPlayer) {
+                                    setItems((prevItems) =>
+                                        prevItems.map((item) => (item.id === selectedPlayer.id ? selectedPlayer : item))
+                                    );
+                                }
+                                setModalVisible(false);
+                            }}
+                        >
+                            Speichern
+                        </Button>
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
