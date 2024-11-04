@@ -91,9 +91,14 @@ export const leaderboardStyles = StyleSheet.create({
         justifyContent: "space-between",
         marginBottom: 15,
     },
-    leftContainer: {
+    statsContainer: {
         flexDirection: "row",
         alignItems: "center",
+    },
+    detailContainer: {
+        borderRadius: 10,
+        padding: 7,
+        marginHorizontal: 10
     },
     statsButton: {
         marginLeft: 8,

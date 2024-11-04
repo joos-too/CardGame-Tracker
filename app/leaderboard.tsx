@@ -72,9 +72,9 @@ export default function History() {
         const formattedDifference = difference !== 0 ? (difference >= 0 ? `+${difference}` : difference.toString()) : null;
 
         return (
-            <View style={[leaderboardStyles.listElement, themedInput, {borderRadius: 10, padding: 7, marginHorizontal: 10}]}>
+            <View style={[leaderboardStyles.listElement, leaderboardStyles.detailContainer, themedInput]}>
                 <Text style={[{fontSize: 25, paddingLeft: 5}, themedText]}>{`Runde: ${index}`}</Text>
-                <View style={leaderboardStyles.leftContainer}>
+                <View style={leaderboardStyles.statsContainer}>
                     <Text style={[{marginRight: 8, fontSize: 15}, themedText]}>{formattedDifference}</Text>
                     <BorderedText
                         style={{fontSize: 20, width: 75,
@@ -86,53 +86,54 @@ export default function History() {
         );
     };
 
-    const renderPlayer = ({ item }: { item: Player }) => {
-        const uniqueValues = Array.from(new Set(items.map(i => i.totalValue[i.totalValue.length - 1])));
-        const topValues = uniqueValues.sort((a, b) => b - a).slice(0, 3);
-        let borderColor = "";
+const renderPlayer = ({ item }: { item: Player }) => {
+    const currentPlayerValue = item.totalValue[item.totalValue.length - 1];
+    const values = items.map(i => i.totalValue[i.totalValue.length - 1]);
+    const uniqueValues = Array.from(new Set(values)); uniqueValues.sort((a, b) => b - a);
+    const rank = uniqueValues.indexOf(currentPlayerValue) + 1;
 
-        const currentPlayerValue = item.totalValue[item.totalValue.length - 1];
-        if (item.totalValue.length > 1) {
-            if (topValues[0] === currentPlayerValue) {
-                borderColor = colors.gold.borderColor;
-            } else if (topValues[1] === currentPlayerValue) {
-                borderColor = colors.silver.borderColor;
-            } else if (topValues[2] === currentPlayerValue) {
-                borderColor = colors.bronze.borderColor;
-            }
+    let borderColor = "";
+    if (uniqueValues.length > 1) {
+        if (uniqueValues[0] === currentPlayerValue) {
+            borderColor = colors.gold.borderColor;
+        } else if (uniqueValues[1] === currentPlayerValue) {
+            borderColor = colors.silver.borderColor;
+        } else if (uniqueValues[2] === currentPlayerValue) {
+            borderColor = colors.bronze.borderColor;
         }
+    }
 
-        return (
-            <View style={leaderboardStyles.listElement}>
-                <TextInput
-                    style={leaderboardStyles.nameField}
-                    mode="outlined"
-                    editable={false}
-                    textColor={playerColors[items.indexOf(item) % playerColors.length]}>
-                    {item.name !== "" ? item.name : "Spieler"}
-                </TextInput>
-                <View style={leaderboardStyles.leftContainer}>
-                    <IconButton
-                        style={leaderboardStyles.statsButton}
-                        mode="contained"
-                        iconColor={playerColors[items.indexOf(item) % playerColors.length]}
-                        icon="chart-bell-curve-cumulative"
-                        onPress={() => {
-                            setSelectedPlayer(item);
-                            setModalVisible(true);
-                        }}
-                    />
-                    <BorderedText
-                        style={[
-                            leaderboardStyles.totalField,
-                            borderColor !== "" ? { color: borderColor, borderColor: borderColor } : {}
-                        ]}
-                        value={currentPlayerValue.toString()}
-                    />
-                </View>
+    return (
+        <View style={leaderboardStyles.listElement}>
+            <Text style={[{fontSize: 30, fontWeight: "bold"}, themedText]}>
+                #{rank}
+            </Text>
+            <Text
+                style={{fontSize: 30, fontWeight: "bold", color: playerColors[items.indexOf(item) % playerColors.length]}}>
+                {item.name !== "" ? item.name : "Spieler"}
+            </Text>
+            <View style={leaderboardStyles.statsContainer}>
+                <IconButton
+                    style={leaderboardStyles.statsButton}
+                    mode="contained"
+                    iconColor={playerColors[items.indexOf(item) % playerColors.length]}
+                    icon="chart-bell-curve-cumulative"
+                    onPress={() => {
+                        setSelectedPlayer(item);
+                        setModalVisible(true);
+                    }}
+                />
+                <BorderedText
+                    style={[
+                        leaderboardStyles.totalField,
+                        borderColor !== "" ? { color: borderColor, borderColor: borderColor } : {}
+                    ]}
+                    value={currentPlayerValue.toString()}
+                />
             </View>
-        );
-    };
+        </View>
+    );
+};
 
     return (
         <PaperProvider>
