@@ -1,11 +1,10 @@
 import React, {useState, useEffect} from "react";
 import {Text, View, FlatList, ListRenderItem, useColorScheme} from "react-native";
 import {TextInput, Button, IconButton, Provider as PaperProvider, Appbar, Dialog, Portal, Paragraph} from "react-native-paper";
-import {StatusBar} from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {indexStyles} from "@/constants/Styles";
-import {themeColors} from "@/constants/Colors";
+import {generalStyles, indexStyles, listStyles} from "@/constants/Styles";
 import BorderedText from "@/components/BorderedText";
+import {themeColors} from "@/constants/Colors";
 import {Player} from "@/constants/Interfaces";
 
 const Players: Player[] = [
@@ -132,7 +131,7 @@ export default function App() {
     const renderPlayer: ListRenderItem<Player> = ({ item, index }) => {
 
         return (
-            <View style={[indexStyles.listElement, themeContainer]}>
+            <View style={[listStyles.listRow, themeContainer]}>
                 <TextInput
                     style={[indexStyles.nameField, index === activePlayerIndex && { fontWeight: "bold" }]}
                     mode="outlined"
@@ -146,7 +145,7 @@ export default function App() {
                         )
                     }
                 />
-                <View style={indexStyles.innerListGroup}>
+                <View style={listStyles.row}>
                     <BorderedText
                         style={[indexStyles.innerListItem, !toggleRight && !isEditing && { borderColor: "#6200ee" }]}
                         value={item.leftValue.toString()}
@@ -156,7 +155,7 @@ export default function App() {
                         value={item.rightValue !== undefined ? item.rightValue.toString() : ""}
                     />
                 </View>
-                <View style={indexStyles.innerListGroup}>
+                <View style={listStyles.row}>
                     {isEditing ? (
                         <IconButton
                             style={[indexStyles.valueButton, indexStyles.innerListItem, { width: 88 }]}
@@ -206,7 +205,7 @@ export default function App() {
             </Appbar.Header>
             <View
                 removeClippedSubviews={false}
-                style={[indexStyles.container, themeContainer, isEditing ? {paddingBottom: 145} : {paddingBottom: 100}]}>
+                style={[generalStyles.container, themeContainer, isEditing ? {paddingBottom: 145} : {paddingBottom: 100}]}>
                 <FlatList
                     data={items}
                     keyboardShouldPersistTaps="handled"
@@ -313,7 +312,6 @@ export default function App() {
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
-            <StatusBar/>
         </PaperProvider>
     );
 }

@@ -1,13 +1,13 @@
 import React, {useState} from "react";
-import {View, Text, useColorScheme, ActivityIndicator, FlatList, Modal, TouchableWithoutFeedback, Share} from "react-native";
+import {View, Text, useColorScheme, ActivityIndicator, FlatList, Modal, TouchableWithoutFeedback, Share, TouchableHighlight,} from "react-native";
+import {Appbar, Provider as PaperProvider, IconButton} from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useFocusEffect} from "@react-navigation/native";
-import {Appbar, Provider as PaperProvider, IconButton, TextInput} from "react-native-paper";
-import {Player} from "@/constants/Interfaces";
-import {leaderboardStyles} from "@/constants/Styles";
+import {generalStyles, leaderboardStyles, listStyles} from "@/constants/Styles";
 import {themeColors, colors, playerColors} from "@/constants/Colors";
 import BorderedText from "@/components/BorderedText";
 import HistoryChart from "@/components/HistoryChart";
+import {Player} from "@/constants/Interfaces";
 
 export default function History() {
     const colorScheme = useColorScheme();
@@ -72,12 +72,12 @@ export default function History() {
         const formattedDifference = difference !== 0 ? (difference >= 0 ? `+${difference}` : difference.toString()) : null;
 
         return (
-            <View style={[leaderboardStyles.listElement, leaderboardStyles.detailContainer, themedInput]}>
-                <Text style={[{fontSize: 25, paddingLeft: 5}, themedText]}>{`Runde: ${index}`}</Text>
+            <View style={[listStyles.listRow, leaderboardStyles.contrastBubble, themedInput]}>
+                <Text style={[{fontSize: 25, paddingLeft: 5}, themedText]}>{`Runde ${index}`}</Text>
                 <View style={leaderboardStyles.statsContainer}>
                     <Text style={[{marginRight: 8, fontSize: 15}, themedText]}>{formattedDifference}</Text>
                     <BorderedText
-                        style={{fontSize: 20, width: 75,
+                        style={{fontSize: 20, width: 65,
                             color: playerColors[items.indexOf(selectedPlayer as Player) % playerColors.length]
                             }}
                         value={item.toString()}/>
@@ -86,54 +86,44 @@ export default function History() {
         );
     };
 
-const renderPlayer = ({ item }: { item: Player }) => {
-    const currentPlayerValue = item.totalValue[item.totalValue.length - 1];
-    const values = items.map(i => i.totalValue[i.totalValue.length - 1]);
-    const uniqueValues = Array.from(new Set(values)); uniqueValues.sort((a, b) => b - a);
-    const rank = uniqueValues.indexOf(currentPlayerValue) + 1;
+    const renderPlayer = ({ item }: { item: Player }) => {
+        const currentPlayerValue = item.totalValue[item.totalValue.length - 1];
+        const values = items.map(i => i.totalValue[i.totalValue.length - 1]);
+        const uniqueValues = Array.from(new Set(values)); uniqueValues.sort((a, b) => b - a);
+        const rank = uniqueValues.indexOf(currentPlayerValue) + 1;
 
-    let borderColor = "";
-    if (uniqueValues.length > 1) {
-        if (uniqueValues[0] === currentPlayerValue) {
-            borderColor = colors.gold.borderColor;
-        } else if (uniqueValues[1] === currentPlayerValue) {
-            borderColor = colors.silver.borderColor;
-        } else if (uniqueValues[2] === currentPlayerValue) {
-            borderColor = colors.bronze.borderColor;
-        }
-    }
+        const borderColorMap: { [key: string]: string } = {
+            [uniqueValues[0]]: colors.gold.borderColor,
+            [uniqueValues[1]]: colors.silver.borderColor,
+            [uniqueValues[2]]: colors.bronze.borderColor,
+        };
+        const borderColor = (uniqueValues.length > 1 && borderColorMap[currentPlayerValue]) || "";
 
-    return (
-        <View style={leaderboardStyles.listElement}>
-            <Text style={[{fontSize: 30, fontWeight: "bold"}, themedText]}>
-                #{rank}
-            </Text>
-            <Text
-                style={{fontSize: 30, fontWeight: "bold", color: playerColors[items.indexOf(item) % playerColors.length]}}>
-                {item.name !== "" ? item.name : "Spieler"}
-            </Text>
-            <View style={leaderboardStyles.statsContainer}>
-                <IconButton
-                    style={leaderboardStyles.statsButton}
-                    mode="contained"
-                    iconColor={playerColors[items.indexOf(item) % playerColors.length]}
-                    icon="chart-bell-curve-cumulative"
-                    onPress={() => {
-                        setSelectedPlayer(item);
-                        setModalVisible(true);
-                    }}
-                />
-                <BorderedText
-                    style={[
-                        leaderboardStyles.totalField,
-                        borderColor !== "" ? { color: borderColor, borderColor: borderColor } : {}
-                    ]}
-                    value={currentPlayerValue.toString()}
-                />
-            </View>
-        </View>
-    );
-};
+        return (
+            <TouchableHighlight
+                onPress={() => {
+                    setSelectedPlayer(item);
+                    setModalVisible(true);
+                }}>
+                <View style={[listStyles.listRow, leaderboardStyles.contrastBubble, themedInput]}>
+                    <View style={listStyles.row}>
+                        <BorderedText
+                            style={leaderboardStyles.placementText}
+                            value={`#${rank}`}/>
+                        <Text
+                            style={[leaderboardStyles.playerName, {color: playerColors[items.indexOf(item) % playerColors.length]}]}>
+                            {item.name !== "" ? item.name : "Spieler"}
+                        </Text>
+                    </View>
+                        <BorderedText
+                            style={[
+                                leaderboardStyles.totalField,
+                                borderColor !== "" ? {color: borderColor, borderColor: borderColor} : {}]}
+                            value={currentPlayerValue.toString()}/>
+                </View>
+            </TouchableHighlight>
+        );
+    };
 
     return (
         <PaperProvider>
@@ -141,7 +131,7 @@ const renderPlayer = ({ item }: { item: Player }) => {
                 <Appbar.Content title="Leaderboard"/>
                 <Appbar.Action icon="share-variant" onPress={shareStats}/>
             </Appbar.Header>
-            <View style={[leaderboardStyles.container, themeContainer]}>
+            <View style={[generalStyles.container, themeContainer]}>
                 {loading ? (
                     <ActivityIndicator
                         style={leaderboardStyles.buffer}
@@ -187,7 +177,7 @@ const renderPlayer = ({ item }: { item: Player }) => {
                                 </View>
                             </TouchableWithoutFeedback>
                             <FlatList
-                                data={selectedPlayer?.totalValue}
+                                data={selectedPlayer.totalValue}
                                 renderItem={renderPlayerStats}
                             />
                         </>

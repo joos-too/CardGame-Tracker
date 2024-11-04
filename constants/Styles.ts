@@ -1,10 +1,26 @@
 import {Dimensions, StyleSheet} from "react-native";
 
-export const indexStyles = StyleSheet.create({
+export const generalStyles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
     },
+})
+
+export const listStyles = StyleSheet.create({
+    listRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: 15
+    },
+    row: {
+        flexDirection: "row",
+        alignItems: "center"
+    },
+})
+
+export const indexStyles = StyleSheet.create({
     totalBetView: {
         flex: 1.75,
         alignItems: "center",
@@ -30,20 +46,11 @@ export const indexStyles = StyleSheet.create({
     },
 
     //list-items//
-    listElement: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: 15,
-    },
     innerListItem: {
         marginHorizontal: 4,
     },
-    innerListGroup: {
-        flexDirection: "row"
-    },
     nameField: {
-        width: 100,
+        flex: 1,
         marginRight: 4,
         borderWidth: 1,
         borderRadius: 6,
@@ -52,7 +59,7 @@ export const indexStyles = StyleSheet.create({
         borderRadius: 10,
     },
     totalField: {
-        flex: 1,
+        flex: 0.75,
         height: 55,
         marginLeft: 4,
         fontSize: 25,
@@ -72,10 +79,6 @@ export const indexStyles = StyleSheet.create({
 })
 
 export const leaderboardStyles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 10,
-    },
     chart: {
         alignItems: "center",
         marginBottom: 15
@@ -85,20 +88,13 @@ export const leaderboardStyles = StyleSheet.create({
     },
 
     //list-items//
-    listElement: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: 15,
-    },
     statsContainer: {
         flexDirection: "row",
         alignItems: "center",
     },
-    detailContainer: {
+    contrastBubble: {
         borderRadius: 10,
         padding: 7,
-        marginHorizontal: 10
     },
     statsButton: {
         marginLeft: 8,
@@ -106,12 +102,15 @@ export const leaderboardStyles = StyleSheet.create({
         width: 45,
         height: 45,
     },
-    nameField: {
+    placementText: {
+        fontSize: 25,
         fontWeight: "bold",
-        width: 100,
-        marginRight: 4,
-        borderWidth: 1,
-        borderRadius: 6,
+        width: 50
+    },
+    playerName: {
+        fontSize: 25,
+        fontWeight: "bold",
+        marginLeft: 10
     },
     totalField: {
         marginLeft: 4,
@@ -125,7 +124,7 @@ export const leaderboardStyles = StyleSheet.create({
         height: Dimensions.get("window").height,
         padding: 10,
         paddingTop: 75,
-        backgroundColor: "rgba(0,0,0,0.8)",
+        backgroundColor: "rgba(0,0,0,0.9)",
     },
     modalCloseButton : {
         position: "absolute",
@@ -135,8 +134,5 @@ export const leaderboardStyles = StyleSheet.create({
     modalTitle: {
         fontSize: 30,
         marginBottom: 16,
-    },
-    modalStats: {
-        justifyContent: "flex-end"
     },
 })
