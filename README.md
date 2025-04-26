@@ -4,8 +4,8 @@ Eine mobile App zum Verfolgen von Punkteständen in verschiedenen Kartenspielen.
 
 ## Funktionen
 
-### Originaler Spieltracker
-Verfolge Punktestände für das originale Kartenspiel mit linken und rechten Werten.
+### Fahrstuhl Spieltracker
+Verfolge Punktestände für Fahrstuhl
 
 ### Cabo Spieltracker
 Verfolge Punktestände für das Cabo-Kartenspiel mit den folgenden Funktionen:
