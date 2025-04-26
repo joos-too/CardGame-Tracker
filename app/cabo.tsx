@@ -152,7 +152,14 @@ export default function CaboTracker() {
                 }
 
                 // Add the round score to the total
-                newTotalValue.push(lastValue + roundScore);
+                let newTotal = lastValue + roundScore;
+
+                // Check if player has exactly -100 points, reduce to -50
+                if (newTotal === -100) {
+                    newTotal = -50;
+                }
+
+                newTotalValue.push(newTotal);
 
                 // Reset for next round
                 return {
