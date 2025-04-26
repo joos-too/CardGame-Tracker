@@ -34,6 +34,15 @@ export default function TabLayout() {
                         ),
                     }}
                 />
+                <Tabs.Screen
+                    name="cabo"
+                    options={{
+                        title: "Cabo",
+                        tabBarIcon: ({color, focused}) => (
+                            <TabBarIcon name={focused ? "cards" : "cards-outline"} color={color}/>
+                        ),
+                    }}
+                />
             </Tabs>
         </ThemeProvider>
     );
