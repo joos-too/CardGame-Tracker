@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
-import {Text, View, FlatList, ListRenderItem, useColorScheme, Alert} from "react-native";
-import {TextInput, Button, IconButton, Provider as PaperProvider, Appbar, Dialog, Portal, Paragraph, Checkbox} from "react-native-paper";
+import {View, FlatList, ListRenderItem, useColorScheme, Alert} from "react-native";
+import {TextInput, Button, IconButton, Provider as PaperProvider, Appbar, Dialog, Portal, Text, Checkbox} from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {generalStyles, indexStyles, listStyles} from "@/constants/Styles";
 import BorderedText from "@/components/BorderedText";
@@ -21,9 +21,8 @@ const initialPlayers: CaboPlayer[] = [
     {id: "4", name: "", leftValue: 0, totalValue: [0], currentRoundScore: 0, hasCalled: false, hasKamikaze: false},
 ];
 
-export default function CaboTracker() {
+export default function Cabo() {
     const colorScheme = useColorScheme();
-    const themeText = colorScheme === "light" ? themeColors.light.text : themeColors.dark.text;
     const themeContainer = colorScheme === "light" ? themeColors.light.container : themeColors.dark.container;
 
     const [players, setPlayers] = useState<CaboPlayer[]>(initialPlayers);
@@ -341,7 +340,7 @@ export default function CaboTracker() {
                     <Dialog.Icon icon="alert"/>
                     <Dialog.Title>Spiel zurücksetzen</Dialog.Title>
                     <Dialog.Content>
-                        <Paragraph>Möchtest du das gesamte Spiel zurücksetzen?</Paragraph>
+                        <Text variant="bodyMedium">Möchtest du das gesamte Spiel zurücksetzen?</Text>
                     </Dialog.Content>
                     <Dialog.Actions>
                         <Button onPress={() => setResetConfirmationVisible(false)}>Abbrechen</Button>
@@ -353,7 +352,7 @@ export default function CaboTracker() {
                     <Dialog.Icon icon="check-all"/>
                     <Dialog.Title>Runde beenden</Dialog.Title>
                     <Dialog.Content>
-                        <Paragraph>Möchtest du die aktuelle Runde beenden und die Punkte berechnen?</Paragraph>
+                        <Text variant="bodyMedium">Möchtest du die aktuelle Runde beenden und die Punkte berechnen?</Text>
                     </Dialog.Content>
                     <Dialog.Actions>
                         <Button onPress={() => setEndRoundConfirmationVisible(false)}>Abbrechen</Button>
