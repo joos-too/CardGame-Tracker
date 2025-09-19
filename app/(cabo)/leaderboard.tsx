@@ -25,7 +25,7 @@ export default function History() {
         React.useCallback(() => {
             const loadItems = async () => {
                 try {
-                    const savedItems = await AsyncStorage.getItem("players");
+                    const savedItems = await AsyncStorage.getItem("caboPlayers");
                     if (savedItems) {
                         const players: Player[] = JSON.parse(savedItems);
                         players.sort((a, b) => {
@@ -59,12 +59,12 @@ export default function History() {
     const totalValueLength = items[0]?.totalValue.length || 0;
     const labels = Array.from({length: totalValueLength}, (_, index) => index.toString());
     const datasets = items.map((item, index) => ({
-        data: item.totalValue,
+        data: item.totalValue.map(v => -v),
         color: (opacity = 1) => playerColors[index % playerColors.length],
     }));
 
     const playerDataChart = selectedPlayer
-        ? { labels: labels, datasets: [{ data: selectedPlayer.totalValue, color: (opacity = 1) => playerColors[items.indexOf(selectedPlayer) % playerColors.length] }] }
+        ? { labels: labels, datasets: [{ data: selectedPlayer.totalValue.map(v => -v), color: (opacity = 1) => playerColors[items.indexOf(selectedPlayer) % playerColors.length] }] }
         : { labels: [], datasets: [] };
 
     const renderPlayerStats = ({item, index}: { item: number; index: number }) => {
