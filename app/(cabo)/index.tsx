@@ -89,16 +89,28 @@ export default function Cabo() {
         savePlayers();
     }, [players]);
 
-    // Update a player's current round score
+    // Update a player's current round score by delta (legacy, no longer used by UI)
     const updateScore = (index: number, delta: number) => {
         setPlayers((prevPlayers) =>
             prevPlayers.map((player, idx) => {
                 if (idx === index) {
                     const newScore = Math.max(0, player.currentRoundScore + delta);
-                    return {...player, currentRoundScore: newScore};
+                    return { ...player, currentRoundScore: newScore };
                 }
                 return player;
             }),
+        );
+    };
+
+    // Directly set a player's current round score from text input
+    const setScoreFromInput = (index: number, text: string) => {
+        // Allow only digits, treat empty as 0
+        const sanitized = text.replace(/[^0-9]/g, "");
+        const value = sanitized === "" ? 0 : parseInt(sanitized, 10);
+        setPlayers((prevPlayers) =>
+            prevPlayers.map((player, idx) =>
+                idx === index ? { ...player, currentRoundScore: Math.max(0, value) } : player,
+            ),
         );
     };
 
@@ -261,38 +273,14 @@ export default function Cabo() {
                     }
                 />
                 <View style={listStyles.row}>
-                    <BorderedText
-                        style={[indexStyles.innerListItem, { width: 60 }]}
-                        value={item.currentRoundScore.toString()}
+                    <TextInput
+                        style={[indexStyles.innerListItem, { width: 80 }]}
+                        mode="outlined"
+                        keyboardType="numeric"
+                        placeholder="0"
+                        value={item.currentRoundScore === 0 ? "" : item.currentRoundScore.toString()}
+                        onChangeText={(text) => setScoreFromInput(index, text)}
                     />
-                </View>
-                <View style={listStyles.row}>
-                    {isEditing ? (
-                        <IconButton
-                            style={[indexStyles.valueButton, indexStyles.innerListItem, { width: 88 }]}
-                            mode="contained"
-                            icon="pencil"
-                            onPress={() => {
-                                setSelectedPlayer(item);
-                                setModalVisible(true);
-                            }}
-                        />
-                    ) : (
-                        <>
-                            <IconButton
-                                style={[indexStyles.valueButton, indexStyles.innerListItem]}
-                                mode="contained"
-                                icon="minus"
-                                onPress={() => updateScore(index, -1)}
-                            />
-                            <IconButton
-                                style={[indexStyles.valueButton, indexStyles.innerListItem]}
-                                mode="contained"
-                                icon="plus"
-                                onPress={() => updateScore(index, 1)}
-                            />
-                        </>
-                    )}
                 </View>
                 <View style={listStyles.row}>
                     {!isEditing && (

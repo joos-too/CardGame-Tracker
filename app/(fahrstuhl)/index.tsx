@@ -285,7 +285,8 @@ export default function App() {
                             <TextInput
                                 style={[indexStyles.modalValueField, {marginRight: 10}]}
                                 label="Linker Wert"
-                                value={selectedPlayer?.leftValue.toString()}
+                                placeholder="0"
+                                value={selectedPlayer && selectedPlayer.leftValue === 0 ? "" : selectedPlayer?.leftValue.toString()}
                                 mode="outlined"
                                 keyboardType="numeric"
                                 onChangeText={(text) => {
@@ -298,7 +299,8 @@ export default function App() {
                                 style={[indexStyles.modalValueField, {marginLeft: 10}]}
                                 label="Rechter Wert"
                                 editable={toggleRight}
-                                value={selectedPlayer?.rightValue ? selectedPlayer?.rightValue.toString() : "0"}
+                                placeholder="0"
+                                value={selectedPlayer && (selectedPlayer.rightValue === undefined || selectedPlayer.rightValue === 0) ? "" : selectedPlayer?.rightValue?.toString()}
                                 mode="outlined"
                                 keyboardType="numeric"
                                 onChangeText={(text) => {
@@ -311,7 +313,8 @@ export default function App() {
                         <TextInput
                             style={indexStyles.modalItem}
                             label="Summe"
-                            value={selectedPlayer?.totalValue[selectedPlayer?.totalValue.length - 1].toString()}
+                            placeholder="0"
+                            value={selectedPlayer && selectedPlayer.totalValue[selectedPlayer.totalValue.length - 1] === 0 ? "" : selectedPlayer?.totalValue[selectedPlayer?.totalValue.length - 1].toString()}
                             mode="outlined"
                             keyboardType="numeric"
                             onChangeText={(text) => {
