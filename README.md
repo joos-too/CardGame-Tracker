@@ -27,3 +27,4 @@ Verfolge Punktestände für das Cabo-Kartenspiel mit den folgenden Funktionen:
 - [ ] Cabo ansagen rückgängig machen (beim Rest ausgrauen, bei Ansager togglebar)
 - [ ] Finale Punkte Editieren/Runde bestätigen rückgänig machen in Cabo
 - [ ] "-" Zeichen zur Skala hinzufügen
+- [ ] use paper everywhere, f.E. Modals
