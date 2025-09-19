@@ -1,11 +1,13 @@
-import React, {useState, useEffect} from "react";
-import {View, FlatList, ListRenderItem, useColorScheme} from "react-native";
-import {TextInput, Button, IconButton, Provider as PaperProvider, Appbar, Dialog, Portal, Text} from "react-native-paper";
+import React, {useState, useEffect, useLayoutEffect} from "react";
+import {View, FlatList, ListRenderItem, useColorScheme, Pressable} from "react-native";
+import {TextInput, Button, IconButton, Dialog, Portal, Text} from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {generalStyles, indexStyles, listStyles} from "@/constants/Styles";
 import BorderedText from "@/components/BorderedText";
 import {themeColors} from "@/constants/Colors";
 import {Player} from "@/constants/Interfaces";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
 
 const Players: Player[] = [
     {id: "1", name: "", leftValue: 0, totalValue: [0]},
@@ -128,6 +130,42 @@ export default function App() {
         setItems((prevItems) => prevItems.slice(0, -1));
     };
 
+    const navigation = useNavigation();
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: () => (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Text style={[{ fontSize: 20, marginRight: 12 }, themeText]}>Fahrstuhl</Text>
+                    <View style={indexStyles.totalBetView}>
+                        <Text style={[indexStyles.totalBetText, themeText]}>
+                            {`${getLeftTotal()}:${getRightTotal()}`}
+                        </Text>
+                    </View>
+                </View>
+            ),
+            headerRight: () => (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Pressable
+                        accessibilityLabel={isEditing ? "Speichern" : "Bearbeiten"}
+                        hitSlop={10}
+                        onPress={() => setIsEditing(!isEditing)}
+                        style={{ paddingHorizontal: 8 }}
+                    >
+                        <MaterialCommunityIcons name={isEditing ? "content-save" : "pencil"} size={24} color={themeColors[colorScheme === "light" ? "light" : "dark"].text.color} />
+                    </Pressable>
+                    <Pressable
+                        accessibilityLabel="Zurücksetzen"
+                        hitSlop={10}
+                        onPress={() => setResetConfirmationVisible(true)}
+                        style={{ paddingRight: 12, paddingLeft: 4 }}
+                    >
+                        <MaterialCommunityIcons name="restore" size={24} color={themeColors[colorScheme === "light" ? "light" : "dark"].text.color} />
+                    </Pressable>
+                </View>
+            ),
+        });
+    }, [navigation, isEditing, colorScheme, items]);
+
     const renderPlayer: ListRenderItem<Player> = ({ item, index }) => {
 
         return (
@@ -192,17 +230,7 @@ export default function App() {
     };
 
     return (
-        <PaperProvider>
-            <Appbar.Header>
-                <Appbar.Content title="Fahrstuhl"/>
-                <View style={indexStyles.totalBetView}>
-                    <Text style={[indexStyles.totalBetText, themeText]}>
-                        {`${getLeftTotal()}:${getRightTotal()}`}
-                    </Text>
-                </View>
-                <Appbar.Action icon={isEditing ? "content-save" : "pencil"} onPress={() => setIsEditing(!isEditing)}/>
-                <Appbar.Action icon="restore" onPress={() => setResetConfirmationVisible(true)}/>
-            </Appbar.Header>
+        <>
             <View
                 removeClippedSubviews={false}
                 style={[generalStyles.container, themeContainer, isEditing ? {paddingBottom: 145} : {paddingBottom: 100}]}>
@@ -312,6 +340,6 @@ export default function App() {
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
-        </PaperProvider>
+        </>
     );
 }

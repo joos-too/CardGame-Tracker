@@ -1,13 +1,14 @@
-import React, {useState} from "react";
-import {View, Text, useColorScheme, ActivityIndicator, FlatList, Modal, TouchableWithoutFeedback, Share, TouchableHighlight,} from "react-native";
-import {Appbar, Provider as PaperProvider, IconButton} from "react-native-paper";
+import React, {useState, useLayoutEffect} from "react";
+import {View, Text, useColorScheme, ActivityIndicator, FlatList, Modal, TouchableWithoutFeedback, Share, TouchableHighlight, Pressable} from "react-native";
+import {IconButton} from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {useFocusEffect} from "@react-navigation/native";
+import {useFocusEffect, useNavigation} from "@react-navigation/native";
 import {generalStyles, leaderboardStyles, listStyles} from "@/constants/Styles";
 import {themeColors, colors, playerColors} from "@/constants/Colors";
 import BorderedText from "@/components/BorderedText";
 import HistoryChart from "@/components/HistoryChart";
 import {Player} from "@/constants/Interfaces";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function History() {
     const colorScheme = useColorScheme();
@@ -125,12 +126,26 @@ export default function History() {
         );
     };
 
+    const navigation = useNavigation();
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: "Leaderboard",
+            headerRight: () => (
+                <Pressable
+                    accessibilityLabel="Teilen"
+                    hitSlop={10}
+                    onPress={shareStats}
+                    style={{ paddingRight: 12 }}
+                >
+                    <MaterialCommunityIcons name="share-variant" size={24} color={themedText.color} />
+                </Pressable>
+            ),
+            headerLeft: () => null,
+        });
+    }, [navigation, themedText, items]);
+
     return (
-        <PaperProvider>
-            <Appbar.Header>
-                <Appbar.Content title="Leaderboard"/>
-                <Appbar.Action icon="share-variant" onPress={shareStats}/>
-            </Appbar.Header>
+        <>
             <View style={[generalStyles.container, themeContainer]}>
                 {loading ? (
                     <ActivityIndicator
@@ -184,6 +199,6 @@ export default function History() {
                     )}
                 </View>
             </Modal>
-        </PaperProvider>
+        </>
     );
 }

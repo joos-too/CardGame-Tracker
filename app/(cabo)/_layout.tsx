@@ -1,12 +1,14 @@
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import React from "react";
-import {useColorScheme} from "react-native";
+import {Pressable, useColorScheme} from "react-native";
 import {TabBarIcon} from "@/components/TabBarIcon";
 import {themeColors} from "@/constants/Colors";
 import {DarkTheme, DefaultTheme, ThemeProvider} from "@react-navigation/native";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function CaboTabLayout() {
     const colorScheme = useColorScheme();
+    const router = useRouter();
     const themeText = colorScheme === "light" ? themeColors.light.text : themeColors.dark.text;
 
     return (
@@ -14,7 +16,18 @@ export default function CaboTabLayout() {
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: themeText.color,
-                    headerShown: false,
+                    headerShown: true,
+                    headerTitle: "Cabo",
+                    headerLeft: ({ tintColor }) => (
+                        <Pressable
+                            accessibilityLabel="Zu Fahrstuhl wechseln"
+                            hitSlop={10}
+                            onPress={() => router.replace("/(fahrstuhl)")}
+                            style={{ paddingHorizontal: 12 }}
+                        >
+                            <MaterialCommunityIcons name="elevator" size={24} color={tintColor ?? themeText.color} />
+                        </Pressable>
+                    ),
                 }}>
                 <Tabs.Screen
                     name="index"

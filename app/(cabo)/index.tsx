@@ -1,11 +1,13 @@
-import React, {useState, useEffect} from "react";
-import {View, FlatList, ListRenderItem, useColorScheme, Alert} from "react-native";
-import {TextInput, Button, IconButton, Provider as PaperProvider, Appbar, Dialog, Portal, Text, Checkbox} from "react-native-paper";
+import React, {useState, useEffect, useLayoutEffect} from "react";
+import {View, FlatList, ListRenderItem, useColorScheme, Alert, Pressable} from "react-native";
+import {TextInput, Button, IconButton, Dialog, Portal, Text, Checkbox} from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {generalStyles, indexStyles, listStyles} from "@/constants/Styles";
 import BorderedText from "@/components/BorderedText";
 import {themeColors} from "@/constants/Colors";
 import {Player} from "@/constants/Interfaces";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
 
 // Extended Player interface for Cabo
 interface CaboPlayer extends Player {
@@ -33,6 +35,32 @@ export default function Cabo() {
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [roundEnded, setRoundEnded] = useState<boolean>(false);
     const [caboCallerIndex, setCaboCallerIndex] = useState<number>(-1);
+
+    const navigation = useNavigation();
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Pressable
+                        accessibilityLabel={isEditing ? "Speichern" : "Bearbeiten"}
+                        hitSlop={10}
+                        onPress={() => setIsEditing(!isEditing)}
+                        style={{ paddingHorizontal: 8 }}
+                    >
+                        <MaterialCommunityIcons name={isEditing ? "content-save" : "pencil"} size={24} color={themeColors[colorScheme === "light" ? "light" : "dark"].text.color} />
+                    </Pressable>
+                    <Pressable
+                        accessibilityLabel="Zurücksetzen"
+                        hitSlop={10}
+                        onPress={() => setResetConfirmationVisible(true)}
+                        style={{ paddingRight: 12, paddingLeft: 4 }}
+                    >
+                        <MaterialCommunityIcons name="restore" size={24} color={themeColors[colorScheme === "light" ? "light" : "dark"].text.color} />
+                    </Pressable>
+                </View>
+            ),
+        });
+    }, [navigation, isEditing, colorScheme]);
 
     // Load players from AsyncStorage
     useEffect(() => {
@@ -295,12 +323,7 @@ export default function Cabo() {
     };
 
     return (
-        <PaperProvider>
-            <Appbar.Header>
-                <Appbar.Content title="Cabo"/>
-                <Appbar.Action icon={isEditing ? "content-save" : "pencil"} onPress={() => setIsEditing(!isEditing)}/>
-                <Appbar.Action icon="restore" onPress={() => setResetConfirmationVisible(true)}/>
-            </Appbar.Header>
+        <>
             <View
                 style={[generalStyles.container, themeContainer, isEditing ? {paddingBottom: 145} : {paddingBottom: 100}]}>
                 <FlatList
@@ -429,6 +452,6 @@ export default function Cabo() {
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
-        </PaperProvider>
+        </>
     );
 }
