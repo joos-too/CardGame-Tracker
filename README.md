@@ -24,4 +24,5 @@ Verfolge Punktestände für das Cabo-Kartenspiel mit den folgenden Funktionen:
 </div>
 
 ## To-Dos
-- make cabo and fahrstuhl work together
+- [ ] Cabo ansagen bestätigen oder Rückgängig machen, Finale Punkte Editieren in Cabo/Runde bestätigen rückgänig machen
+- [ ] "-" Zeichen zur Skala hinzufügen
