@@ -17,8 +17,8 @@ export default function Start() {
         <Link href="/(cabo)" asChild>
           <Button mode="contained" icon="cards">Cabo Tracker</Button>
         </Link>
-        <Link href="/(aufzug)" asChild>
-          <Button mode="contained" icon="elevator">Aufzug Tracker</Button>
+        <Link href="/(fahrstuhl)" asChild>
+          <Button mode="contained" icon="elevator">Fahrstuhl Tracker</Button>
         </Link>
       </View>
     </PaperProvider>

@@ -24,6 +24,6 @@ Verfolge Punktestände für das Cabo-Kartenspiel mit den folgenden Funktionen:
 </div>
 
 ## To-Dos
-- Add navigate back buttons to every page in (aufzug) and (cabo)
+- Add navigate back buttons to every page in (fahrstuhl) and (cabo)
 - Fix theming with react native paper
 - make cabo and fahrstuhl work together

@@ -5,7 +5,7 @@ import {TabBarIcon} from "@/components/TabBarIcon";
 import {themeColors} from "@/constants/Colors";
 import {DarkTheme, DefaultTheme, ThemeProvider} from "@react-navigation/native";
 
-export default function AufzugTabLayout() {
+export default function FahrstuhlTabLayout() {
     const colorScheme = useColorScheme();
     const themeText = colorScheme === "light" ? themeColors.light.text : themeColors.dark.text;
 

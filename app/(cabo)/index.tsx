@@ -297,7 +297,7 @@ export default function Cabo() {
     return (
         <PaperProvider>
             <Appbar.Header>
-                <Appbar.Content title="Cabo Punktezähler"/>
+                <Appbar.Content title="Cabo"/>
                 <Appbar.Action icon={isEditing ? "content-save" : "pencil"} onPress={() => setIsEditing(!isEditing)}/>
                 <Appbar.Action icon="restore" onPress={() => setResetConfirmationVisible(true)}/>
             </Appbar.Header>

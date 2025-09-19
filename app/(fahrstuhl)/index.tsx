@@ -194,7 +194,7 @@ export default function App() {
     return (
         <PaperProvider>
             <Appbar.Header>
-                <Appbar.Content title="Tabelle"/>
+                <Appbar.Content title="Fahrstuhl"/>
                 <View style={indexStyles.totalBetView}>
                     <Text style={[indexStyles.totalBetText, themeText]}>
                         {`${getLeftTotal()}:${getRightTotal()}`}

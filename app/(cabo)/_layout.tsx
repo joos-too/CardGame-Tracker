@@ -19,9 +19,9 @@ export default function CaboTabLayout() {
                 <Tabs.Screen
                     name="index"
                     options={{
-                        title: "Cabo",
+                        title: "Tabelle",
                         tabBarIcon: ({color, focused}) => (
-                            <TabBarIcon name={focused ? "cards" : "cards-outline"} color={color}/>
+                            <TabBarIcon name={focused ? "table" : "table-border"} color={color}/>
                         ),
                     }}
                 />
