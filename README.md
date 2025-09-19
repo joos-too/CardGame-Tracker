@@ -22,6 +22,3 @@ Verfolge Punktestände für das Cabo-Kartenspiel mit den folgenden Funktionen:
     <img src="https://i.imgur.com/Bwb5a4P.png" alt="Leaderboard" width="200">
     <img src="https://i.imgur.com/aY8oh7X.png" alt="Player" width="200">
 </div>
-
-## To-Dos
-- make cabo and fahrstuhl work together
