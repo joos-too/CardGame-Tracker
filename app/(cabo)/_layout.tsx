@@ -3,7 +3,6 @@ import React from "react";
 import {Pressable, useColorScheme} from "react-native";
 import {TabBarIcon} from "@/components/TabBarIcon";
 import {themeColors} from "@/constants/Colors";
-import {DarkTheme, DefaultTheme, ThemeProvider} from "@react-navigation/native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function CaboTabLayout() {
@@ -12,7 +11,6 @@ export default function CaboTabLayout() {
     const themeText = colorScheme === "light" ? themeColors.light.text : themeColors.dark.text;
 
     return (
-        <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: themeText.color,
@@ -48,6 +46,5 @@ export default function CaboTabLayout() {
                     }}
                 />
             </Tabs>
-        </ThemeProvider>
     );
 }
