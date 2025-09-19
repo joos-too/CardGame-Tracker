@@ -14,13 +14,14 @@ interface CaboPlayer extends Player {
     currentRoundScore: number;
     hasCalled: boolean;
     hasKamikaze: boolean;
+    caboCalls: number; // Anzahl der Cabo-Ansagen über alle Runden
 }
 
 const initialPlayers: CaboPlayer[] = [
-    {id: "1", name: "", leftValue: 0, totalValue: [0], currentRoundScore: 0, hasCalled: false, hasKamikaze: false},
-    {id: "2", name: "", leftValue: 0, totalValue: [0], currentRoundScore: 0, hasCalled: false, hasKamikaze: false},
-    {id: "3", name: "", leftValue: 0, totalValue: [0], currentRoundScore: 0, hasCalled: false, hasKamikaze: false},
-    {id: "4", name: "", leftValue: 0, totalValue: [0], currentRoundScore: 0, hasCalled: false, hasKamikaze: false},
+    {id: "1", name: "", leftValue: 0, totalValue: [0], currentRoundScore: 0, hasCalled: false, hasKamikaze: false, caboCalls: 0},
+    {id: "2", name: "", leftValue: 0, totalValue: [0], currentRoundScore: 0, hasCalled: false, hasKamikaze: false, caboCalls: 0},
+    {id: "3", name: "", leftValue: 0, totalValue: [0], currentRoundScore: 0, hasCalled: false, hasKamikaze: false, caboCalls: 0},
+    {id: "4", name: "", leftValue: 0, totalValue: [0], currentRoundScore: 0, hasCalled: false, hasKamikaze: false, caboCalls: 0},
 ];
 
 export default function Cabo() {
@@ -35,6 +36,8 @@ export default function Cabo() {
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [roundEnded, setRoundEnded] = useState<boolean>(false);
     const [caboCallerIndex, setCaboCallerIndex] = useState<number>(-1);
+    const [endGameVisible, setEndGameVisible] = useState<boolean>(false);
+    const [endGameWinners, setEndGameWinners] = useState<string>("");
 
     const navigation = useNavigation();
     useLayoutEffect(() => {
@@ -68,7 +71,13 @@ export default function Cabo() {
             try {
                 const savedPlayers = await AsyncStorage.getItem("caboPlayers");
                 if (savedPlayers) {
-                    setPlayers(JSON.parse(savedPlayers));
+                    const parsed: CaboPlayer[] = JSON.parse(savedPlayers);
+                    // Backward compatibility: ensure caboCalls exists
+                    const normalized = parsed.map(p => ({
+                        ...p,
+                        caboCalls: typeof (p as any).caboCalls === "number" ? (p as any).caboCalls : 0,
+                    }));
+                    setPlayers(normalized);
                 }
             } catch (error) {
                 console.error("Error loading players:", error);
@@ -124,7 +133,7 @@ export default function Cabo() {
         setPlayers((prevPlayers) =>
             prevPlayers.map((player, idx) => {
                 if (idx === index) {
-                    return {...player, hasCalled: true};
+                    return {...player, hasCalled: true, caboCalls: (player.caboCalls || 0) + 1};
                 }
                 return player;
             }),
@@ -147,69 +156,82 @@ export default function Cabo() {
 
     // End the current round and calculate scores
     const endRound = () => {
-        // Find the player with the lowest score
+        // Determine lowest current round score
         const lowestScore = Math.min(...players.map(p => p.currentRoundScore));
-        const lowestScorePlayers = players.filter(p => p.currentRoundScore === lowestScore);
-
-        // Check for Kamikaze winners
         const kamikazeWinners = players.filter(p => p.hasKamikaze);
 
-        setPlayers((prevPlayers) => {
-            return prevPlayers.map(player => {
-                let newTotalValue = [...player.totalValue];
-                let lastValue = newTotalValue[newTotalValue.length - 1] || 0;
-                let roundScore = 0;
+        // Determine winners according to tie rules
+        let winnersIds: Set<string> = new Set();
+        if (kamikazeWinners.length > 0) {
+            // All kamikaze players win
+            winnersIds = new Set(kamikazeWinners.map(p => p.id));
+        } else {
+            const lowestPlayers = players.filter(p => p.currentRoundScore === lowestScore);
+            const caboInLowest = lowestPlayers.find(p => p.hasCalled);
+            if (caboInLowest) {
+                winnersIds = new Set([caboInLowest.id]);
+            } else {
+                // No cabo caller among lowest; all lowest players win (can be >1)
+                winnersIds = new Set(lowestPlayers.map(p => p.id));
+            }
+        }
 
-                // Handle Kamikaze rule
-                if (kamikazeWinners.length > 0) {
-                    if (player.hasKamikaze) {
-                        // Kamikaze winner gets 0 points
-                        roundScore = 0;
-                    } else {
-                        // Everyone else gets -50 points
-                        roundScore = -50;
-                    }
-                } 
-                // Normal scoring
-                else {
-                    // Check if this player has the lowest score
-                    const isLowestScore = player.currentRoundScore === lowestScore;
+        // Compute updated players with new totals according to rules
+        const updatedPlayers: CaboPlayer[] = players.map(player => {
+            const newTotalValue = [...player.totalValue];
+            const lastValue = newTotalValue[newTotalValue.length - 1] || 0;
+            let roundScore = 0;
 
-                    // Check if this player called Cabo but doesn't have the lowest score
-                    const calledCaboButNotLowest = player.hasCalled && !isLowestScore;
-
-                    if (isLowestScore) {
-                        // Winner gets 0 points
-                        roundScore = 0;
-                    } else if (calledCaboButNotLowest) {
-                        // Cabo caller who doesn't win gets their points plus 5 penalty points
-                        roundScore = -player.currentRoundScore - 5;
-                    } else {
-                        // Everyone else gets negative points equal to their card values
-                        roundScore = -player.currentRoundScore;
-                    }
+            if (kamikazeWinners.length > 0) {
+                // Kamikaze: winner(s) 0, others -50
+                roundScore = winnersIds.has(player.id) ? 0 : -50;
+            } else {
+                if (winnersIds.has(player.id)) {
+                    roundScore = 0;
+                } else if (player.hasCalled) {
+                    roundScore = -player.currentRoundScore - 5; // +5 Strafpunkte zusätzlich
+                } else {
+                    roundScore = -player.currentRoundScore;
                 }
+            }
 
-                // Add the round score to the total
-                let newTotal = lastValue + roundScore;
+            let newTotal = lastValue + roundScore;
+            // Exactly -100 becomes -50
+            if (newTotal === -100) newTotal = -50;
+            newTotalValue.push(newTotal);
 
-                // Check if player has exactly -100 points, reduce to -50
-                if (newTotal === -100) {
-                    newTotal = -50;
-                }
-
-                newTotalValue.push(newTotal);
-
-                // Reset for next round
-                return {
-                    ...player,
-                    currentRoundScore: 0,
-                    hasCalled: false,
-                    hasKamikaze: false,
-                    totalValue: newTotalValue
-                };
-            });
+            return {
+                ...player,
+                currentRoundScore: 0,
+                hasCalled: false,
+                hasKamikaze: false,
+                totalValue: newTotalValue,
+            };
         });
+
+        // Apply updated players
+        setPlayers(updatedPlayers);
+
+        // Determine if game ends: someone has less than -100 (über 100 Minuspunkte)
+        const isGameOver = updatedPlayers.some(p => (p.totalValue[p.totalValue.length - 1] as number) < -100);
+
+        if (isGameOver) {
+            // Winner: fewest Gesamtpunkte => numerisch höchster Wert (da negative Minuspunkte)
+            const finalTotals = updatedPlayers.map(p => p.totalValue[p.totalValue.length - 1] as number);
+            const maxTotal = Math.max(...finalTotals);
+            const topPlayers = updatedPlayers.filter(p => (p.totalValue[p.totalValue.length - 1] as number) === maxTotal);
+
+            // Tie-breaker: derjenige, der öfter Cabo angesagt hat
+            let winners: CaboPlayer[] = topPlayers;
+            if (topPlayers.length > 1) {
+                const maxCalls = Math.max(...topPlayers.map(p => p.caboCalls || 0));
+                winners = topPlayers.filter(p => (p.caboCalls || 0) === maxCalls);
+            }
+
+            const names = winners.map(w => w.name?.trim() || "Spieler").join(", ");
+            setEndGameWinners(names);
+            setEndGameVisible(true);
+        }
 
         setCaboCallerIndex(-1);
         setRoundEnded(false);
@@ -242,7 +264,8 @@ export default function Cabo() {
                 totalValue: [0], 
                 currentRoundScore: 0, 
                 hasCalled: false, 
-                hasKamikaze: false
+                hasKamikaze: false,
+                caboCalls: 0,
             },
         ]);
     };
@@ -437,6 +460,19 @@ export default function Cabo() {
                         >
                             Speichern
                         </Button>
+                    </Dialog.Actions>
+                </Dialog>
+
+                <Dialog visible={endGameVisible} onDismiss={() => setEndGameVisible(false)}>
+                    <Dialog.Icon icon="trophy" />
+                    <Dialog.Title>Spiel beendet</Dialog.Title>
+                    <Dialog.Content>
+                        <Text variant="bodyMedium">Das Spiel ist zu Ende.</Text>
+                        <Text style={{ marginTop: 8 }} variant="bodyLarge">Gewinner: {endGameWinners}</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={() => setEndGameVisible(false)}>OK</Button>
+                        <Button onPress={() => { setEndGameVisible(false); resetGame(); }}>Neues Spiel</Button>
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
