@@ -41,6 +41,9 @@ export default function Cabo() {
     const [endGameVisible, setEndGameVisible] = useState<boolean>(false);
     const [endGameWinners, setEndGameWinners] = useState<string>("");
 
+    // Temporary input values for editing final totals (start empty, show placeholder)
+    const [tempTotalInputs, setTempTotalInputs] = useState<string[]>([]);
+
     const navigation = useNavigation();
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -99,6 +102,15 @@ export default function Cabo() {
         };
         savePlayers();
     }, [players]);
+
+    // Initialize/reset temp inputs when entering/leaving edit mode or player count changes
+    useEffect(() => {
+        if (isEditing) {
+            setTempTotalInputs(new Array(players.length).fill(""));
+        } else {
+            setTempTotalInputs([]);
+        }
+    }, [isEditing, players.length]);
 
     // Update a player's current round score by delta (legacy, no longer used by UI)
     const updateScore = (index: number, delta: number) => {
@@ -343,10 +355,38 @@ export default function Cabo() {
                         </>
                     )}
                 </View>
-                <BorderedText
-                    style={[indexStyles.totalField]}
-                    value={item.totalValue[item.totalValue.length - 1].toString()}
-                />
+                {isEditing ? (
+                    <TextInput
+                        style={[indexStyles.totalField]}
+                        mode="outlined"
+                        keyboardType="numeric"
+                        placeholder={item.totalValue[item.totalValue.length - 1].toString()}
+                        value={tempTotalInputs[index] ?? ""}
+                        onChangeText={(text) => {
+                            // Update temp input state
+                            setTempTotalInputs((prev) => {
+                                const next = [...prev];
+                                next[index] = text;
+                                return next;
+                            });
+                            // Also update the actual total immediately
+                            const num = parseInt(text, 10);
+                            setPlayers((prevPlayers) =>
+                                prevPlayers.map((p, idx) => {
+                                    if (idx !== index) return p;
+                                    const newTotal = [...p.totalValue];
+                                    newTotal[newTotal.length - 1] = isNaN(num) ? 0 : num;
+                                    return { ...p, totalValue: newTotal };
+                                })
+                            );
+                        }}
+                    />
+                ) : (
+                    <BorderedText
+                        style={[indexStyles.totalField]}
+                        value={item.totalValue[item.totalValue.length - 1].toString()}
+                    />
+                )}
             </View>
         );
     };
