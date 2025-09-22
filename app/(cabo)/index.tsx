@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useLayoutEffect} from "react";
-import {View, FlatList, ListRenderItem, useColorScheme, Alert, Pressable} from "react-native";
+import {View, FlatList, ListRenderItem, useColorScheme, Pressable} from "react-native";
 import {TextInput, Button, IconButton, Dialog, Portal, Text, Checkbox} from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {generalStyles, indexStyles, listStyles} from "@/constants/Styles";
@@ -8,6 +8,7 @@ import {themeColors} from "@/constants/Colors";
 import {Player} from "@/constants/Interfaces";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
+import { useDialog } from "@/components/DialogProvider";
 
 // Extended Player interface for Cabo
 interface CaboPlayer extends Player {
@@ -27,6 +28,7 @@ const initialPlayers: CaboPlayer[] = [
 export default function Cabo() {
     const colorScheme = useColorScheme();
     const themeContainer = colorScheme === "light" ? themeColors.light.container : themeColors.dark.container;
+    const dialog = useDialog();
 
     const [players, setPlayers] = useState<CaboPlayer[]>(initialPlayers);
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -125,21 +127,36 @@ export default function Cabo() {
 
     // Call Cabo for a player
     const callCabo = (index: number) => {
-        if (caboCallerIndex !== -1) {
-            Alert.alert("Cabo bereits angesagt", "Jemand hat in dieser Runde bereits Cabo angesagt.");
+        // Wenn noch niemand Cabo angesagt hat: für diesen Spieler ansagen
+        if (caboCallerIndex === -1) {
+            setPlayers((prevPlayers) =>
+                prevPlayers.map((player, idx) => {
+                    if (idx === index) {
+                        return { ...player, hasCalled: true, caboCalls: (player.caboCalls || 0) + 1 };
+                    }
+                    return player;
+                }),
+            );
+            setCaboCallerIndex(index);
+            dialog.alert("Cabo angesagt", `${players[index].name || "Spieler"} hat Cabo angesagt! Jeder andere Spieler bekommt noch einen Zug.`);
             return;
         }
 
-        setPlayers((prevPlayers) =>
-            prevPlayers.map((player, idx) => {
-                if (idx === index) {
-                    return {...player, hasCalled: true, caboCalls: (player.caboCalls || 0) + 1};
-                }
-                return player;
-            }),
-        );
-        setCaboCallerIndex(index);
-        Alert.alert("Cabo angesagt", `${players[index].name || "Spieler"} hat Cabo angesagt! Jeder andere Spieler bekommt noch einen Zug.`);
+        // Wenn derselbe Spieler erneut drückt: Ansage zurücknehmen
+        if (caboCallerIndex === index) {
+            setPlayers((prevPlayers) =>
+                prevPlayers.map((player, idx) => {
+                    if (idx === index) {
+                        const newCalls = Math.max(0, (player.caboCalls || 0) - 1);
+                        return { ...player, hasCalled: false, caboCalls: newCalls };
+                    }
+                    return player;
+                }),
+            );
+            setCaboCallerIndex(-1);
+            dialog.alert("Cabo zurückgenommen", `Die Cabo-Ansage wurde zurückgenommen.`);
+            return;
+        }
     };
 
     // Toggle Kamikaze status for a player
@@ -275,7 +292,7 @@ export default function Cabo() {
         if (players.length > 2) {
             setPlayers((prevPlayers) => prevPlayers.slice(0, -1));
         } else {
-            Alert.alert("Entfernen nicht möglich", "Du brauchst mindestens 2 Spieler für Cabo.");
+            dialog.alert("Entfernen nicht möglich", "Du brauchst mindestens 2 Spieler für Cabo.");
         }
     };
 
@@ -313,7 +330,8 @@ export default function Cabo() {
                                 mode="contained"
                                 icon="flag-checkered"
                                 onPress={() => callCabo(index)}
-                                disabled={item.hasCalled || caboCallerIndex !== -1}
+                                disabled={caboCallerIndex !== -1 && index !== caboCallerIndex}
+                                iconColor={item.hasCalled ? "#00c853" : undefined}
                             />
                             <IconButton
                                 style={[indexStyles.valueButton, indexStyles.innerListItem]}

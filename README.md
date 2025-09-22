@@ -1,5 +1,4 @@
-# Kartenspiel-Tracker <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/512px-Typescript_logo_2020.svg.png" alt="Typesript Logo" width="23">
-
+# Kartenspiel-Tracker
 Eine mobile App zum Verfolgen von Punkteständen in verschiedenen Kartenspielen.
 
 ## Funktionen
@@ -24,7 +23,7 @@ Verfolge Punktestände für das Cabo-Kartenspiel mit den folgenden Funktionen:
 </div>
 
 ## To-Dos
-- [ ] Cabo ansagen rückgängig machen (beim Rest ausgrauen, bei Ansager togglebar)
+- [x] Cabo ansagen rückgängig machen (beim Rest ausgrauen, bei Ansager togglebar)
+- [x] use paper everywhere, f.E. Modals
 - [ ] Finale Punkte Editieren/Runde bestätigen rückgänig machen in Cabo
 - [ ] "-" Zeichen zur Skala hinzufügen
-- [ ] use paper everywhere, f.E. Modals
