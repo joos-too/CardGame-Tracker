@@ -158,6 +158,7 @@ export default function History() {
                             <HistoryChart
                                 data={{labels: labels, datasets: datasets}}
                                 shadow={false}
+                                formatYLabel={(val) => (val.startsWith("-") ? val : `-${val}`)}
                             />
                         </View>
                         <FlatList
@@ -188,7 +189,7 @@ export default function History() {
                                         style={[leaderboardStyles.modalTitle, { color: playerColors[items.indexOf(selectedPlayer) % playerColors.length] }]}>
                                         {selectedPlayer.name !== "" ? selectedPlayer.name : "Spieler"}
                                     </Text>
-                                    <HistoryChart data={playerDataChart}/>
+                                    <HistoryChart data={playerDataChart} formatYLabel={(val) => (val.startsWith("-") ? val : `-${val}`)} />
                                 </View>
                             </TouchableWithoutFeedback>
                             <FlatList
