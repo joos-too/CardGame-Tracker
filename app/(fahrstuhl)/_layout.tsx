@@ -18,12 +18,12 @@ export default function FahrstuhlTabLayout() {
                     headerTitle: "Fahrstuhl",
                     headerLeft: ({ tintColor }) => (
                         <Pressable
-                            accessibilityLabel="Zu Cabo wechseln"
+                            accessibilityLabel="Zurück zur Startseite"
                             hitSlop={10}
-                            onPress={() => router.replace("/(cabo)")}
+                            onPress={() => router.back()}
                             style={{ paddingHorizontal: 12 }}
                         >
-                            <MaterialCommunityIcons name="cards" size={24} color={tintColor ?? themeText.color} />
+                            <MaterialCommunityIcons name="arrow-left" size={24} color={tintColor ?? themeText.color} />
                         </Pressable>
                     ),
                 }}>

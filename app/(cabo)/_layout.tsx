@@ -18,12 +18,12 @@ export default function CaboTabLayout() {
                     headerTitle: "Cabo",
                     headerLeft: ({ tintColor }) => (
                         <Pressable
-                            accessibilityLabel="Zu Fahrstuhl wechseln"
+                            accessibilityLabel="Zurück zur Startseite"
                             hitSlop={10}
-                            onPress={() => router.replace("/(fahrstuhl)")}
+                            onPress={() => router.back()}
                             style={{ paddingHorizontal: 12 }}
                         >
-                            <MaterialCommunityIcons name="elevator" size={24} color={tintColor ?? themeText.color} />
+                            <MaterialCommunityIcons name="arrow-left" size={24} color={tintColor ?? themeText.color} />
                         </Pressable>
                     ),
                 }}>
