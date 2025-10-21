@@ -1,18 +1,21 @@
-# Kartenspiel-Tracker
-Eine mobile App zum Verfolgen von Punkteständen in verschiedenen Kartenspielen.
+# Cardgame-Tracker
+Eine React Native Expo App zum Verfolgen von Punkteständen in verschiedenen Kartenspielen.
 
-## Funktionen
+## Unterstützte Spiele
 
-### Fahrstuhl Spieltracker
+### Fahrstuhl
 Verfolge Punktestände für Fahrstuhl
+- Trage angesagte und erreichte Stichzahlen je Spieler und Runde ein
+- Automatische Punkteberechnung basierend auf den Fahrstuhl-Regeln
+- Bearbeitung bei Fehleinträgen möglich
+- Verfolge im Leaderbord den Punkteverlauf im Spiel
+- Teile die Ergebnisse mit Freunden
 
-### Cabo Spieltracker
-Verfolge Punktestände für das Cabo-Kartenspiel mit den folgenden Funktionen:
-- Verfolge aktuelle Rundenpunkte für jeden Spieler
+### Cabo
+Verfolge Punktestände für das Cabo-Kartenspiel mit den gleichen Funktionen wie bei Fahrstuhl und folgende andere:
 - Sage "Cabo" an, wenn du glaubst, die niedrigste Punktzahl zu haben
 - Verfolge Kamikaze-Kombinationen (2x12 und 2x13)
 - Automatische Punkteberechnung basierend auf den Cabo-Regeln
-- Verfolge Punktestände über mehrere Runden hinweg
 
 ## Screenshots
 
@@ -30,4 +33,4 @@ Verfolge Punktestände für das Cabo-Kartenspiel mit den folgenden Funktionen:
 - [x] Packages updaten
 - [ ] Cards für Home Screen
 - [ ] Regel Screen für beide Spiele hinzufügen 
-- [ ] Readme updaten
+- [ ] Readme updaten (Screenshots, Texte, Todos entfernen)
