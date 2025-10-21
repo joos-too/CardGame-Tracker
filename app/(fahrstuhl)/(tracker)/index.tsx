@@ -7,7 +7,8 @@ import BorderedText from "@/components/BorderedText";
 import {themeColors} from "@/constants/Colors";
 import {Player} from "@/constants/Interfaces";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useNavigation } from "@react-navigation/native";
+import {useNavigation} from "@react-navigation/native";
+import {useRouter} from "expo-router";
 
 const Players: Player[] = [
     {id: "1", name: "", leftValue: 0, totalValue: [0]},
@@ -18,6 +19,7 @@ const Players: Player[] = [
 
 export default function App() {
     const colorScheme = useColorScheme();
+    const router = useRouter();
     const themeText = colorScheme === "light" ? themeColors.light.text : themeColors.dark.text;
     const themeContainer = colorScheme === "light" ? themeColors.light.container : themeColors.dark.container;
 
@@ -134,8 +136,8 @@ export default function App() {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTitle: () => (
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Text style={[{ fontSize: 20, marginRight: 12 }, themeText]}>Fahrstuhl</Text>
+                <View style={{flexDirection: "row", alignItems: "center"}}>
+                    <Text style={[{fontSize: 20, marginRight: 12}, themeText]}>Fahrstuhl</Text>
                     <View style={indexStyles.totalBetView}>
                         <Text style={[indexStyles.totalBetText, themeText]}>
                             {`${getLeftTotal()}:${getRightTotal()}`}
@@ -144,89 +146,100 @@ export default function App() {
                 </View>
             ),
             headerRight: () => (
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Pressable
-                        accessibilityLabel={isEditing ? "Speichern" : "Bearbeiten"}
-                        hitSlop={10}
-                        onPress={() => setIsEditing(!isEditing)}
-                        style={{ paddingHorizontal: 8 }}
-                    >
-                        <MaterialCommunityIcons name={isEditing ? "content-save" : "pencil"} size={24} color={themeColors[colorScheme === "light" ? "light" : "dark"].text.color} />
-                    </Pressable>
-                    <Pressable
-                        accessibilityLabel="Zurücksetzen"
-                        hitSlop={10}
-                        onPress={() => setResetConfirmationVisible(true)}
-                        style={{ paddingRight: 12, paddingLeft: 4 }}
-                    >
-                        <MaterialCommunityIcons name="restore" size={24} color={themeColors[colorScheme === "light" ? "light" : "dark"].text.color} />
-                    </Pressable>
-                </View>
-            ),
-        });
-    }, [navigation, isEditing, colorScheme, items]);
+                <View style={{flexDirection: "row", alignItems: "center"}}>
+                        <Pressable
+                            accessibilityLabel={"Zu den Regeln"}
+                            hitSlop={10}
+                            onPress={() => router.push("rules")}
+                            style={{paddingHorizontal: 8}}
+                        >
+                            <MaterialCommunityIcons name={"information"} size={24}
+                                                    color={themeColors[colorScheme === "light" ? "light" : "dark"].text.color}/>
+                        </Pressable>
+                        <Pressable
+                            accessibilityLabel={isEditing ? "Speichern" : "Bearbeiten"}
+                            hitSlop={10}
+                            onPress={() => setIsEditing(!isEditing)}
+                            style={{paddingHorizontal: 8}}
+                        >
+                            <MaterialCommunityIcons name={isEditing ? "content-save" : "pencil"} size={24}
+                                                    color={themeColors[colorScheme === "light" ? "light" : "dark"].text.color}/>
+                        </Pressable>
+                        <Pressable
+                            accessibilityLabel="Zurücksetzen"
+                            hitSlop={10}
+                            onPress={() => setResetConfirmationVisible(true)}
+                            style={{paddingRight: 12, paddingLeft: 4}}
+                        >
+                            <MaterialCommunityIcons name="restore" size={24}
+                                                    color={themeColors[colorScheme === "light" ? "light" : "dark"].text.color}/>
+                        </Pressable>
+                    </View>
+                    ),
+                    });
+                    }, [navigation, isEditing, colorScheme, items]);
 
-    const renderPlayer: ListRenderItem<Player> = ({ item, index }) => {
+                    const renderPlayer: ListRenderItem<Player> = ({item, index}) => {
 
-        return (
-            <View style={[listStyles.listRow, themeContainer]}>
-                <TextInput
-                    style={[indexStyles.nameField, index === activePlayerIndex && { fontWeight: "bold" }]}
-                    mode="outlined"
-                    editable={isEditing}
-                    textColor={index === activePlayerIndex ? "#873def" : ""}
-                    placeholder="Spieler"
-                    value={item.name}
-                    onChangeText={(text) =>
-                        setItems((prevItems) =>
-                            prevItems.map((i, idx) => (idx === index ? { ...i, name: text } : i)),
-                        )
-                    }
-                />
-                <View style={listStyles.row}>
-                    <BorderedText
-                        style={[indexStyles.innerListItem, !toggleRight && !isEditing && { borderColor: "#6200ee" }]}
-                        value={item.leftValue.toString()}
+                    return (
+                    <View style={[listStyles.listRow, themeContainer]}>
+                    <TextInput
+                        style={[indexStyles.nameField, index === activePlayerIndex && {fontWeight: "bold"}]}
+                        mode="outlined"
+                        editable={isEditing}
+                        textColor={index === activePlayerIndex ? "#873def" : ""}
+                        placeholder="Spieler"
+                        value={item.name}
+                        onChangeText={(text) =>
+                            setItems((prevItems) =>
+                                prevItems.map((i, idx) => (idx === index ? {...i, name: text} : i)),
+                            )
+                        }
                     />
-                    <BorderedText
-                        style={[indexStyles.innerListItem, toggleRight && !isEditing && { borderColor: "#6200ee" }]}
-                        value={item.rightValue !== undefined ? item.rightValue.toString() : ""}
-                    />
-                </View>
-                <View style={listStyles.row}>
-                    {isEditing ? (
-                        <IconButton
-                            style={[indexStyles.valueButton, indexStyles.innerListItem, { width: 88 }]}
-                            mode="contained"
-                            icon="pencil"
-                            onPress={() => {
-                                setSelectedPlayer(item);
-                                setModalVisible(true);
-                            }}
+                    <View style={listStyles.row}>
+                        <BorderedText
+                            style={[indexStyles.innerListItem, !toggleRight && !isEditing && {borderColor: "#6200ee"}]}
+                            value={item.leftValue.toString()}
                         />
-                    ) : (
-                        <>
+                        <BorderedText
+                            style={[indexStyles.innerListItem, toggleRight && !isEditing && {borderColor: "#6200ee"}]}
+                            value={item.rightValue !== undefined ? item.rightValue.toString() : ""}
+                        />
+                    </View>
+                    <View style={listStyles.row}>
+                        {isEditing ? (
                             <IconButton
-                                style={[indexStyles.valueButton, indexStyles.innerListItem]}
+                                style={[indexStyles.valueButton, indexStyles.innerListItem, {width: 88}]}
                                 mode="contained"
-                                icon="minus"
-                                onPress={() => updateValue(index, -1)}
+                                icon="pencil"
+                                onPress={() => {
+                                    setSelectedPlayer(item);
+                                    setModalVisible(true);
+                                }}
                             />
-                            <IconButton
-                                style={[indexStyles.valueButton, indexStyles.innerListItem]}
-                                mode="contained"
-                                icon="plus"
-                                onPress={() => updateValue(index, 1)}
-                            />
-                        </>
-                    )}
+                        ) : (
+                            <>
+                                <IconButton
+                                    style={[indexStyles.valueButton, indexStyles.innerListItem]}
+                                    mode="contained"
+                                    icon="minus"
+                                    onPress={() => updateValue(index, -1)}
+                                />
+                                <IconButton
+                                    style={[indexStyles.valueButton, indexStyles.innerListItem]}
+                                    mode="contained"
+                                    icon="plus"
+                                    onPress={() => updateValue(index, 1)}
+                                />
+                            </>
+                        )}
+                    </View>
+                    <BorderedText
+                        style={[indexStyles.totalField, index === activePlayerIndex ? {borderColor: "#873def"} : {}]}
+                        value={item.totalValue[item.totalValue.length - 1].toString()}
+                    />
                 </View>
-                <BorderedText
-                    style={[indexStyles.totalField, index === activePlayerIndex ? { borderColor: "#873def" } : {}]}
-                    value={item.totalValue[item.totalValue.length - 1].toString()}
-                />
-            </View>
-        );
+            );
     };
 
     return (
@@ -291,7 +304,7 @@ export default function App() {
                                 keyboardType="numeric"
                                 onChangeText={(text) => {
                                     if (selectedPlayer) {
-                                        setSelectedPlayer({ ...selectedPlayer, leftValue: Number(text) });
+                                        setSelectedPlayer({...selectedPlayer, leftValue: Number(text)});
                                     }
                                 }}
                             />
@@ -305,7 +318,7 @@ export default function App() {
                                 keyboardType="numeric"
                                 onChangeText={(text) => {
                                     if (selectedPlayer) {
-                                        setSelectedPlayer({ ...selectedPlayer, rightValue: Number(text) });
+                                        setSelectedPlayer({...selectedPlayer, rightValue: Number(text)});
                                     }
                                 }}
                             />
@@ -321,7 +334,7 @@ export default function App() {
                                 if (selectedPlayer) {
                                     const newTotalValue = [...selectedPlayer.totalValue];
                                     newTotalValue[newTotalValue.length - 1] = Number(text);
-                                    setSelectedPlayer({ ...selectedPlayer, totalValue: newTotalValue });
+                                    setSelectedPlayer({...selectedPlayer, totalValue: newTotalValue});
                                 }
                             }}
                         />
@@ -345,4 +358,4 @@ export default function App() {
             </Portal>
         </>
     );
-}
+    }

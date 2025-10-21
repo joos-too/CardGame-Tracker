@@ -15,10 +15,10 @@ export default function Start() {
   }, [navigation]);
   return (
     <View style={[generalStyles.container, themeContainer, { padding: 24, gap: 16 }] }>
-      <Link href="/(cabo)" asChild>
+      <Link href="/(cabo)/(tracker)" asChild>
         <Button mode="contained" icon="cards">Cabo Tracker</Button>
       </Link>
-      <Link href="/(fahrstuhl)" asChild>
+      <Link href="/(fahrstuhl)/(tracker)" asChild>
         <Button mode="contained" icon="elevator">Fahrstuhl Tracker</Button>
       </Link>
     </View>

@@ -1,34 +1,21 @@
-import { Tabs, useRouter } from "expo-router";
+import { Tabs } from "expo-router";
 import React from "react";
-import {Pressable, useColorScheme} from "react-native";
+import {useColorScheme} from "react-native";
 import {TabBarIcon} from "@/components/TabBarIcon";
 import {themeColors} from "@/constants/Colors";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function CaboTabLayout() {
     const colorScheme = useColorScheme();
-    const router = useRouter();
     const themeText = colorScheme === "light" ? themeColors.light.text : themeColors.dark.text;
 
     return (
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: themeText.color,
-                    headerShown: true,
-                    headerTitle: "Cabo",
-                    headerLeft: ({ tintColor }) => (
-                        <Pressable
-                            accessibilityLabel="Zurück zur Startseite"
-                            hitSlop={10}
-                            onPress={() => router.back()}
-                            style={{ paddingHorizontal: 12 }}
-                        >
-                            <MaterialCommunityIcons name="arrow-left" size={24} color={tintColor ?? themeText.color} />
-                        </Pressable>
-                    ),
+                    headerShown: false,
                 }}>
                 <Tabs.Screen
-                    name="index"
+                    name="(tracker)"
                     options={{
                         title: "Tabelle",
                         tabBarIcon: ({color, focused}) => (
@@ -37,7 +24,7 @@ export default function CaboTabLayout() {
                     }}
                 />
                 <Tabs.Screen
-                    name="leaderboard"
+                    name="(leaderboard)"
                     options={{
                         title: "Leaderboard",
                         tabBarIcon: ({color, focused}) => (

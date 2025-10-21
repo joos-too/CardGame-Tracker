@@ -14,7 +14,7 @@ export default function FahrstuhlTabLayout() {
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: themeText.color,
-                    headerShown: true,
+                    headerShown: false,
                     headerTitle: "Fahrstuhl",
                     headerLeft: ({ tintColor }) => (
                         <Pressable
@@ -28,7 +28,7 @@ export default function FahrstuhlTabLayout() {
                     ),
                 }}>
                 <Tabs.Screen
-                    name="index"
+                    name="(tracker)"
                     options={{
                         title: "Tabelle",
                         tabBarIcon: ({color, focused}) => (
@@ -37,7 +37,7 @@ export default function FahrstuhlTabLayout() {
                     }}
                 />
                 <Tabs.Screen
-                    name="leaderboard"
+                    name="(leaderboard)"
                     options={{
                         title: "Leaderboard",
                         tabBarIcon: ({color, focused}) => (

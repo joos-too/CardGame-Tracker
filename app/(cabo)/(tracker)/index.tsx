@@ -9,6 +9,7 @@ import {Player} from "@/constants/Interfaces";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { useDialog } from "@/components/DialogProvider";
+import {useRouter} from "expo-router";
 
 // Extended Player interface for Cabo
 interface CaboPlayer extends Player {
@@ -29,6 +30,7 @@ export default function Cabo() {
     const colorScheme = useColorScheme();
     const themeContainer = colorScheme === "light" ? themeColors.light.container : themeColors.dark.container;
     const dialog = useDialog();
+    const router = useRouter();
 
     const [players, setPlayers] = useState<CaboPlayer[]>(initialPlayers);
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -49,6 +51,14 @@ export default function Cabo() {
         navigation.setOptions({
             headerRight: () => (
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Pressable
+                        accessibilityLabel={"Zu den Regeln"}
+                        hitSlop={10}
+                        onPress={() => router.push("rules")}
+                        style={{ paddingHorizontal: 8 }}
+                    >
+                        <MaterialCommunityIcons name={"information"} size={24} color={themeColors[colorScheme === "light" ? "light" : "dark"].text.color} />
+                    </Pressable>
                     <Pressable
                         accessibilityLabel={isEditing ? "Speichern" : "Bearbeiten"}
                         hitSlop={10}

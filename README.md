@@ -28,3 +28,5 @@ Verfolge Punktestände für das Cabo-Kartenspiel mit den folgenden Funktionen:
 - [x] "-" Zeichen zur Skala hinzufügen
 - [x] Finale Punkte Editierbar machen in Cabo
 - [ ] Regel Screen für beide Spiele hinzufügen 
+- [ ] Packages updaten
+- [ ] Readme updaten
