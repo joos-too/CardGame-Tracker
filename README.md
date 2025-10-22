@@ -26,7 +26,6 @@ Verfolge Punktestände für das Cabo-Kartenspiel mit den gleichen Funktionen wie
     <img src="assets/screenshots/cabo_dark.png" alt="Cabo Tracker" width="200">
     <img src="assets/screenshots/fahrstuhl_dark.png" alt="Fahrstuhl Tracker" width="200">
     <img src="assets/screenshots/leaderboard_fahrstuhl_dark.png" alt="Leaderboard" width="200">
-    <img src="assets/screenshots/player_dark.png" alt="Player Leaderbord View" width="200">
 </div>
 
 ### Light Mode
@@ -36,5 +35,4 @@ Verfolge Punktestände für das Cabo-Kartenspiel mit den gleichen Funktionen wie
     <img src="assets/screenshots/cabo_light.png" alt="Cabo Tracker" width="200">
     <img src="assets/screenshots/fahrstuhl_light.png" alt="Fahrstuhl Tracker" width="200">
     <img src="assets/screenshots/leaderboard_fahrstuhl_light.png" alt="Leaderboard" width="200">
-    <img src="assets/screenshots/player_light.png" alt="Player Leaderbord View" width="200">
 </div>
