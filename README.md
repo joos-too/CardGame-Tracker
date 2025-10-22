@@ -19,8 +19,22 @@ Verfolge Punktestände für das Cabo-Kartenspiel mit den gleichen Funktionen wie
 
 ## Screenshots
 
+### Dark Mode
+
 <div style="display: flex; flex-direction: row; justify-content: space-around;">
-    <img src="https://i.imgur.com/XjK7v52.png" alt="Tabelle" width="200">
-    <img src="https://i.imgur.com/Bwb5a4P.png" alt="Leaderboard" width="200">
-    <img src="https://i.imgur.com/aY8oh7X.png" alt="Player" width="200">
+    <img src="assets/screenshots/home_dark.png" alt="Home Screen" width="200">
+    <img src="assets/screenshots/cabo_dark.png" alt="Cabo Tracker" width="200">
+    <img src="assets/screenshots/fahrstuhl_dark.png" alt="Fahrstuhl Tracker" width="200">
+    <img src="assets/screenshots/leaderboard_fahrstuhl_dark.png" alt="Leaderboard" width="200">
+    <img src="assets/screenshots/player_dark.png" alt="Player Leaderbord View" width="200">
+</div>
+
+### Light Mode
+
+<div style="display: flex; flex-direction: row; justify-content: space-around;">
+    <img src="assets/screenshots/home_light.png" alt="Home Screen" width="200">
+    <img src="assets/screenshots/cabo_light.png" alt="Cabo Tracker" width="200">
+    <img src="assets/screenshots/fahrstuhl_light.png" alt="Fahrstuhl Tracker" width="200">
+    <img src="assets/screenshots/leaderboard_fahrstuhl_light.png" alt="Leaderboard" width="200">
+    <img src="assets/screenshots/player_light.png" alt="Player Leaderbord View" width="200">
 </div>
