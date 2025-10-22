@@ -24,14 +24,3 @@ Verfolge Punktestände für das Cabo-Kartenspiel mit den gleichen Funktionen wie
     <img src="https://i.imgur.com/Bwb5a4P.png" alt="Leaderboard" width="200">
     <img src="https://i.imgur.com/aY8oh7X.png" alt="Player" width="200">
 </div>
-
-## To-Dos
-- [x] Cabo ansagen rückgängig machen (beim Rest ausgrauen, bei Ansager togglebar)
-- [x] use paper everywhere, f.E. Modals
-- [x] "-" Zeichen zur Skala hinzufügen
-- [x] Finale Punkte Editierbar machen in Cabo
-- [x] Packages updaten
-- [x] Cards für Home Screen
-- [x] Fix touchables (container issues on leaderboard in white mode)
-- [ ] Regel Screen für beide Spiele hinzufügen 
-- [ ] Readme updaten (Screenshots, Texte, Todos entfernen)
