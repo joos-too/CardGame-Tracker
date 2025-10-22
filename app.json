@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Aufzug",
-    "slug": "Aufzug",
+    "name": "Cardgame-Tracker",
+    "slug": "cardgame-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -21,7 +21,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.fmlp.AufzugCardGame"
+      "package": "com.fmlp.CardGameTracker"
     },
     "web": {
       "bundler": "metro",
@@ -29,7 +29,8 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-font"
     ]
   }
 }

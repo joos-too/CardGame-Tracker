@@ -15,9 +15,10 @@ interface HistoryChartProps {
     };
     style?: StyleProp<any>;
     shadow?: boolean;
+    formatYLabel?: (label: string) => string;
 }
 
-const HistoryChart: React.FC<HistoryChartProps> = ({ data, style, shadow }) => {
+const HistoryChart: React.FC<HistoryChartProps> = ({ data, style, shadow, formatYLabel }) => {
     const colorScheme = useColorScheme();
 
     return (
@@ -38,6 +39,7 @@ const HistoryChart: React.FC<HistoryChartProps> = ({ data, style, shadow }) => {
                     stroke: colorScheme === "light" ? "#6200ee" : "#1c1c1c",
                 },
             }}
+            formatYLabel={formatYLabel}
             bezier
             style={StyleSheet.flatten([custom.chart, style])}
         />

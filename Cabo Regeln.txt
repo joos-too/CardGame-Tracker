@@ -1,0 +1,86 @@
+CABO - Regeln
+von Melissa Limes
+für 2-8 Spieler ab 7 Jahren, je nach Rundenzahl 5-30 Minuten
+Kurzbeschreibung:
+Ziel ist es, am Ende des Spieles die wenigsten Punkte auf der Hand zu haben. Das ist gar nicht so
+einfach, denn man weiß zum Teil gar nicht, welche Karten man auf der Hand hält.
+Vorbereitung:
+1. Jeder Spieler erhält vier Karten und legt sie unangesehen und verdeckt nebeneinander vor
+sich auf den Tisch. Dies ist die eigene Auslage oder die eigene Hand.
+2. Der Rest der Karten kommt verdeckt als Nachziehstapel in die Mitte des Tisches.
+3. Eine Karte wird vom Nachziehstapel gezogen und aufgedeckt neben den Nachziehstapel
+gelegt: Sie markiert den Anfang des Ablagestapels.
+4. Nun darf sich jeder Spieler einmalig zwei seiner vier vor ihm ausliegenden Karten ansehen.
+Im weiteren Verlauf des Spieles dürfen die Karten nicht mehr angesehen werden, außer
+eine Aktionskarte erlaubt dies. Auch die Lage der Karten darf danach nicht mehr verändert
+werden
+5. Ein Startspieler wird bestimmt und los geht’s! (Der Gewinner dieses Spieles ist der
+Startspieler des nächsten Spieles, der Verlierer muss die Karten mischen und austeilen).
+Spiel:
+Gespielt wird nacheinander im Uhrzeigersinn. Wenn ein Spieler an der Reihe ist, kann er eine von
+drei Optionen wählen:
+1. Die oberste Karte des Ablagestapels nehmen und durch eine Karte der eigenen Auslage
+ersetzen, bzw. gegebenenfalls auch durch mehrere passende Karten im Duett, Triplett oder
+Quartett (Erklärung zum Tauschvorgang siehe unten).
+2. Die oberste Karte des Nachziehstapels ziehen, sie ansehen und dann entweder
+1. direkt auf den Ablagestapel werfen oder
+2. mit einer Karte der eigenen Auslage ersetzen und die nicht mehr gebrauchte Karte
+auf den Ablagestapel werfen oder,
+3. wenn es sich um eine Aktionskarte handelt, die Aktion ausführen und die Karte auf
+den Ablagestapel werfen (Erklärung zu Aktionskarten siehe unten).
+3. "Cabo" ansagen.
+Duett, Triplett, Quartett:
+Ein Spieler kann in seinem Zug 2, 3 oder 4 Karten desselben Wertes in der eigenen Auslage gegen
+nur eine Karte das Nachziehstapels oder Ablagestapels tauschen und damit den Wert der eigenen
+Auslage unter Umständen stark reduzieren. Die wegzutauschenden Duett-, Triplett- oder Quartett-
+Karten werden allen Mitspielern gezeigt und auf den Ablagestapel gelegt. Sollte sich der Spieler bei
+auch nur einer Karte geirrt haben, kommen die vermeintlichen Tauschkarten wieder zurück auf
+ihren Stammplatz in der eigenen Auslage und die gezogene Karte kommt auf den Ablagestapel. Der
+Spieler hat damit einen Zug verloren.
+Beispiel: Wenn Du eine 5 in der Auslage hast und eine weitere 5 ziehst, dann kannst Du die
+gezogene 5 in Deine eigene Auslage legen und dafür eine andere Karte der eigenen Auslage auf
+den Ablagestapel werfen. In Deinem nächsten Zug können beide 5er gegen eine einzige Karte des
+Nachziehstapels oder Ablagestapels weggetauscht werden, d.h., Du ziehst im nächsten Zug eine
+Karte, zeigst allen Mitspielern Deine beiden 5er aus Deiner Auslage, legst die beiden 5er auf den
+Ablagestapel und die gezogene Karte in Deine eigene Auslage. Richtig! Jetzt hast Du nur noch 3
+Karten in der eigenen Auslage.
+Aktionskarten:
+1. Peek: Der Spieler darf sich genau eine Karte der eigenen Auslage ansehen.
+2. Spy: Der Spieler darf sich genau eine Karte in der Auslage eines anderen Spielers ansehen.
+3. Swap: Der Spieler darf genau eine Karte der eigenen Auslage mit genau einer Karte der
+Auslage eines anderen Spielers tauschen, aber dabei keine der beiden Karten ansehen.
+Vom Nachziehstapel gezogene Aktionskarten können entweder
+a) sofort nach dem Ziehen (und nur dann!) ausgeführt und danach auf den Ablagestapel gelegt
+werden oder
+b) wie ganz normale Punktekarten (ohne Ausführen der Aktion) in die eigene Auslage oder direkt
+auf den Ablagestapel gelegt werden.
+Vom Ablagestapel gezogene Karten oder sich in der Auslage befindliche Karten können nur als
+Punktekarten nie jedoch als Aktionskarten verwendet werden.
+Cabo:
+Wenn ein Spieler glaubt, dass sich in seiner Auslage am wenigsten Punkte befinden - im Vergleich
+zu den einzelnen Auslagen aller anderen Spieler - , kann er seinen Zug dazu benutzen, "Cabo"
+anzusagen. Der Spieler darf dann in seinem Zug keine Karten mehr ziehen oder ablegen. Nachdem
+ein Spieler Cabo angesagt hat, sind alle anderen Spieler noch genau einmal am Zug, danach endet
+das Spiel.
+Schlusswertung:
+Am Ende des Spieles deckt jeder Spieler seine Auslage auf und addiert deren Kartenpunktewerte.
+Der Spieler mit den wenigsten Punkten gewinnt und verbucht 0 Punkte. Alle anderen Spieler
+notieren sich auf einem Blatt Papier die addierten Punktewerte ihrer Auslage als Minuspunkte.
+Wenn derjenige Spieler, der Cabo angesagt hat, nicht die wenigsten Punkte in der Spieler-Runde
+hat, bekommt er 5 Strafpunkte (oder nach Vereinbarung vor dem Spiel auch gerne mehr) zusätzlich
+zu seinen Auslage-Minuspunkten. Im Falle eines Gleichstandes gewinnt der Cabo-Ansager. Falls 2
+oder mehr Spieler, die beide nicht Cabo angesagt haben, die wenigsten Punkte haben, gewinnen
+beide und verbuchen beide 0 Punkte.
+Kamikaze-Sonderregel:
+Hat ein Spieler am Spielende je 2 Karten der Werte 12 und 13 in seiner Auslage liegen (also
+12+12+13+13), gewinnt er dieses Spiel und verbucht 0 Punkte. Alle anderen Spieler erhalten 50
+Minuspunkte ungeachtet ihrer eigentlichen Punktezahl.
+Tipp:
+Man kann auch mehrere Partien Cabo hintereinander spielen und jeweils am Partie-Ende die
+Minuspunkte jeden Spielers zu seinen Minuspunkten der vorhergehenden Partien addieren.
+Sobald ein Spieler über 100 Minuspunkte hat, endet das Spiel. Erreicht ein Spieler genau 100
+Minuspunkte, werden seine Minuspunkte auf 50 reduziert. Der Spieler mit den wenigsten
+Gesamtpunkten gewinnt. Im Falle eines Gleichstandes gewinnt derjenige, der öfter Cabo angesagt
+hat.
+Deutsche Übersetzung von Swan Panasia Co., Ltd., Taibei, Taiwan.
+Copyright 2010 Eventide Games, Raleigh, North Carolina, USA.
