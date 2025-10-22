@@ -102,11 +102,12 @@ export default function History() {
 
         return (
             <TouchableHighlight
+                style={{ borderRadius: 10, marginBottom: 15 }}
                 onPress={() => {
                     setSelectedPlayer(item);
                     setModalVisible(true);
                 }}>
-                <View style={[listStyles.listRow, leaderboardStyles.contrastBubble, themedInput]}>
+                <View style={[listStyles.listRow, leaderboardStyles.contrastBubble, themedInput, {marginBottom: 0}]}>
                     <View style={listStyles.row}>
                         <BorderedText
                             style={leaderboardStyles.placementText}
