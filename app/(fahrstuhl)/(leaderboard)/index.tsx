@@ -130,7 +130,6 @@ export default function History() {
     const navigation = useNavigation();
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle: "Leaderboard",
             headerRight: () => (
                 <Pressable
                     accessibilityLabel="Teilen"
@@ -141,7 +140,6 @@ export default function History() {
                     <MaterialCommunityIcons name="share-variant" size={24} color={themedText.color} />
                 </Pressable>
             ),
-            headerLeft: () => null,
         });
     }, [navigation, themedText, items]);
 

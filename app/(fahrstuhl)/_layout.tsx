@@ -15,17 +15,6 @@ export default function FahrstuhlTabLayout() {
                 screenOptions={{
                     tabBarActiveTintColor: themeText.color,
                     headerShown: false,
-                    headerTitle: "Fahrstuhl",
-                    headerLeft: ({ tintColor }) => (
-                        <Pressable
-                            accessibilityLabel="Zurück zur Startseite"
-                            hitSlop={10}
-                            onPress={() => router.back()}
-                            style={{ paddingHorizontal: 12 }}
-                        >
-                            <MaterialCommunityIcons name="arrow-left" size={24} color={tintColor ?? themeText.color} />
-                        </Pressable>
-                    ),
                 }}>
                 <Tabs.Screen
                     name="(tracker)"
