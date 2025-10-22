@@ -25,6 +25,10 @@ const sections = [
         body: "Peek lässt dich eine eigene Karte ansehen. Spy erlaubt dir, eine Karte bei einem Mitspieler zu sehen. Swap zwingt dich, eine eigene Karte blind mit einer Karte eines Mitspielers zu tauschen. Aktionskarten dürfen nur direkt nach dem Ziehen vom Nachziehstapel eingesetzt werden; ziehst du sie offen vom Ablagestapel oder liegen sie bereits in deiner Auslage, gelten sie ausschließlich als Punktekarten.",
     },
     {
+        heading: "Standardkartendeck nutzen",
+        body: "Spielt ihr mit einem gewöhnlichen 52er-Blatt, gelten folgende Entsprechungen: 7er und 8er stehen für Peek (eigene Karte ansehen), 9er und 10er übernehmen Spy (fremde Karte ansehen), Bube und Dame ersetzen Swap (blind tauschen). Für die Punktewertung zählt ein Ass 1 Punkt, ein Bube 11 Punkte, eine Dame 12 Punkte und ein König 13 Punkte; alle übrigen Zahlenkarten behalten ihren Aufdruck als Punktwert.",
+    },
+    {
         heading: "Cabo ansagen",
         body: "Sobald du glaubst, die wenigsten Punkte zu haben, kannst du statt eines normalen Zuges \"Cabo\" rufen. Ab diesem Moment dürfen alle anderen Spieler genau noch einen Zug ausführen. Danach endet die Runde automatisch.",
     },
